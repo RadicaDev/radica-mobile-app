@@ -2,7 +2,8 @@ import {
   Web3ModalOptions,
   defaultWagmiConfig,
 } from "@web3modal/wagmi-react-native";
-import { arbitrum, mainnet, polygon } from "viem/chains";
+import { localhost } from "viem/chains";
+import appSettings from "../app-settings.json";
 
 const projectId = "dace2ce5fa77568df22525a38edf07e8";
 
@@ -17,14 +18,21 @@ const metadata = {
   // },
 };
 
-export const chains = [mainnet, polygon, arbitrum] as const;
+export const chains = [
+  {
+    ...localhost,
+    rpcUrls: {
+      default: { http: [appSettings.rpcUrl] },
+    },
+  },
+] as const;
 
 export const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 
 const modalOptions: Web3ModalOptions = {
   projectId,
   wagmiConfig,
-  defaultChain: mainnet,
+  defaultChain: localhost,
   enableAnalytics: false,
 };
 

@@ -9,10 +9,16 @@ import { StyleSheet } from "react-native";
 import { View } from "react-native";
 
 import signerAddr from "@/constants/SignerAddress";
-import { verifyMessage } from "viem";
+import { keccak256, verifyMessage } from "viem";
+import { useReadContract } from "wagmi";
+import { abi, address } from "@/constants/RadixContract";
+import { privateKeyToAddress } from "viem/accounts";
 
 export default function VerifyScreen() {
   const [data, setData] = useState<string | null>(null);
+  const [recoveredAddress, setRecoveredAddress] = useState<
+    `0x${string}` | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<number>(0.0);
   const [status, setStatus] = useState<string | null>("Status");
@@ -20,16 +26,49 @@ export default function VerifyScreen() {
 
   const theme = useTheme();
 
+  const { data: balance, isError: isErrorBalance } = useReadContract({
+    abi,
+    address,
+    functionName: "balanceOf",
+    args: [recoveredAddress as `0x${string}`],
+    query: {
+      enabled: recoveredAddress !== null,
+    },
+  });
+
   useEffect(() => {
-    // Read the uid
-    // Read the uid signature
-    // verify the signature
-    // quer the blockchain to check for the nft
+    if (isErrorBalance) {
+      setError("Error fetching balance");
+      return;
+    }
+
+    if (balance === undefined) return;
+
+    if (balance === 0n) {
+      (async () => {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setError("Product not Authentic");
+      })();
+      return;
+    }
+
+    if (balance > 0n) {
+      (async () => {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setProgress(1.0);
+        setStatus("Loading data from blockchain...");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        setStatus("Tag is authentic");
+      })();
+    }
+  }, [balance]);
+
+  useEffect(() => {
     (async () => {
       if (!data) return;
 
       // parse the data from hex string to bytes array
-      setStatus("Parsing data");
+      setStatus("Parsing data...");
       setProgress(0.25);
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -38,11 +77,11 @@ export default function VerifyScreen() {
         return;
       }
 
-      const uid = `0x${data.slice(0, 8 * 2)}`;
-      const sig = `0x${data.slice(0x4 * 2 * 4, (0x4 * 4 + 65) * 2)}`;
+      const uid: `0x${string}` = `0x${data.slice(0, 8 * 2)}`;
+      const sig: `0x${string}` = `0x${data.slice(0x4 * 2 * 4, (0x4 * 4 + 65) * 2)}`;
 
       setProgress(0.5);
-      setStatus("Verifying signature");
+      setStatus("Verifying signature...");
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // verify the signature
@@ -65,13 +104,9 @@ export default function VerifyScreen() {
 
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setProgress(0.75);
-      setStatus("Checking blockchain");
+      setStatus("Checking blockchain...");
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      setProgress(1.0);
-      setStatus("Loading data from blockchain");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setStatus("Tag is authentic");
+      setRecoveredAddress(privateKeyToAddress(keccak256(uid)));
     })();
   }, [data]);
 
