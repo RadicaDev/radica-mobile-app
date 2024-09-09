@@ -8,6 +8,9 @@ import { ProgressBar, Text, useTheme } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { View } from "react-native";
 
+import signerAddr from "@/constants/SignerAddress";
+import { verifyMessage } from "viem";
+
 export default function VerifyScreen() {
   const [data, setData] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -28,22 +31,33 @@ export default function VerifyScreen() {
       // parse the data from hex string to bytes array
       setStatus("Parsing data");
       setProgress(0.25);
-      const dataBytes = Buffer.from(data, "hex");
-      if (dataBytes.length < (0x1e + 1) * 4) {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      if (data.length < 0x1c * 2 * 4) {
         setError("Invalid data");
         return;
       }
 
-      const uid = dataBytes.subarray(0, 8);
-      const sig = dataBytes.subarray(0x4, 0x4 + 65);
+      const uid = `0x${data.slice(0, 8 * 2)}`;
+      const sig = `0x${data.slice(0x4 * 2 * 4, (0x4 * 4 + 65) * 2)}`;
 
-      // wait for 1 second
-      await new Promise((resolve) => setTimeout(resolve, 2000));
       setProgress(0.5);
       setStatus("Verifying signature");
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // verify the signature
-      const isVerified = true;
+      let isVerified = false;
+      try {
+        isVerified = await verifyMessage({
+          address: signerAddr,
+          message: { raw: uid as `0x${string}` },
+          signature: sig as `0x${string}`,
+        });
+      } catch (e) {
+        setError("Invalid signature");
+        return;
+      }
+
       if (!isVerified) {
         setError("Tag is not authentic");
         return;
@@ -55,6 +69,8 @@ export default function VerifyScreen() {
 
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setProgress(1.0);
+      setStatus("Loading data from blockchain");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setStatus("Tag is authentic");
     })();
   }, [data]);
