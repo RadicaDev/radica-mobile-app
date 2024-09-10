@@ -12,6 +12,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { PaperProvider } from "react-native-paper";
+import { theme } from "@/theme/paperTheme";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -46,7 +47,9 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
-          <PaperProvider>
+          <PaperProvider
+            theme={colorScheme === "dark" ? theme.dark : theme.light}
+          >
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen

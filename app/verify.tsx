@@ -4,9 +4,11 @@ import { Permissions } from "@/components/Scan/Permissions";
 import { useEffect, useState } from "react";
 import { Scan } from "@/components/Scan/Scan";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ProgressBar, Text, useTheme } from "react-native-paper";
+import { ProgressBar, Text } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { View } from "react-native";
+
+import { useAppTheme } from "@/theme/paperTheme";
 
 import signerAddr from "@/constants/SignerAddress";
 import { keccak256, verifyMessage } from "viem";
@@ -24,7 +26,7 @@ export default function VerifyScreen() {
   const [status, setStatus] = useState<string | null>("Status");
   const [permission, requestPermission] = useCameraPermissions();
 
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   const { data: balance, isError: isErrorBalance } = useReadContract({
     abi,
@@ -137,10 +139,10 @@ export default function VerifyScreen() {
   if (status === "Tag is authentic") {
     return (
       <View
-        style={[styles.container, { backgroundColor: theme.colors.primary }]}
+        style={[styles.container, { backgroundColor: theme.colors.success }]}
       >
-        <Text variant="headlineLarge" style={{ color: theme.colors.onPrimary }}>
-          {status}
+        <Text variant="headlineLarge" style={{ color: theme.colors.onSuccess }}>
+          {status}!
         </Text>
       </View>
     );
