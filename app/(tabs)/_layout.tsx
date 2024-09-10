@@ -2,15 +2,19 @@ import { Tabs } from "expo-router";
 import React from "react";
 
 import { Icon } from "react-native-paper";
-import { useTheme } from "react-native-paper";
+import { useAppTheme } from "@/theme/paperTheme";
 
 export default function TabLayout() {
-  const theme = useTheme();
+  const theme = useAppTheme();
 
   return (
     <Tabs
       screenOptions={{
+        tabBarStyle: {
+          backgroundColor: theme.colors.surface,
+        },
         tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.onSurfaceDisabled,
         headerShown: false,
       }}
     >

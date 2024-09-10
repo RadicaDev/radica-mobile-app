@@ -4,7 +4,7 @@ import { Permissions } from "@/components/Scan/Permissions";
 import { useEffect, useState } from "react";
 import { Scan } from "@/components/Scan/Scan";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ProgressBar, Text } from "react-native-paper";
+import { Icon, ProgressBar, Text } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { View } from "react-native";
 
@@ -15,6 +15,7 @@ import { keccak256, verifyMessage } from "viem";
 import { useReadContract } from "wagmi";
 import { abi, address } from "@/constants/RadixContract";
 import { privateKeyToAddress } from "viem/accounts";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function VerifyScreen() {
   const [data, setData] = useState<string | null>(null);
@@ -39,35 +40,9 @@ export default function VerifyScreen() {
   });
 
   useEffect(() => {
-    if (isErrorBalance) {
-      setError("Error fetching balance");
-      return;
-    }
-
-    if (balance === undefined) return;
-
-    if (balance === 0n) {
-      (async () => {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setError("Product not Authentic");
-      })();
-      return;
-    }
-
-    if (balance > 0n) {
-      (async () => {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        setProgress(1.0);
-        setStatus("Loading data from blockchain...");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        setStatus("Tag is authentic");
-      })();
-    }
-  }, [balance]);
-
-  useEffect(() => {
     (async () => {
       if (!data) return;
+      setProgress(0);
 
       // parse the data from hex string to bytes array
       setStatus("Parsing data...");
@@ -112,13 +87,55 @@ export default function VerifyScreen() {
     })();
   }, [data]);
 
+  useEffect(() => {
+    if (isErrorBalance) {
+      setError("Error fetching balance");
+      return;
+    }
+
+    if (balance === undefined) return;
+
+    if (balance === 0n) {
+      (async () => {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setError("Product not Authentic");
+      })();
+      return;
+    }
+
+    if (balance > 0n) {
+      (async () => {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setProgress(1.0);
+        setStatus("Loading data from blockchain...");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        setStatus("Tag is authentic");
+      })();
+    }
+  }, [balance]);
+
   if (error) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.colors.error }]}>
-        <Text variant="headlineLarge" style={{ color: theme.colors.onError }}>
-          {error}
-        </Text>
-      </View>
+      <LinearGradient
+        colors={[theme.colors.error, theme.colors.surfaceVariant]}
+        style={styles.gradient}
+      >
+        <View style={styles.container}>
+          <View style={styles.icon}>
+            <Icon
+              source="alert-circle-outline"
+              size={100}
+              color={theme.colors.onError}
+            />
+          </View>
+          <Text
+            variant="headlineLarge"
+            style={[styles.text, { color: theme.colors.onError }]}
+          >
+            {error}
+          </Text>
+        </View>
+      </LinearGradient>
     );
   }
 
@@ -138,34 +155,84 @@ export default function VerifyScreen() {
 
   if (status === "Tag is authentic") {
     return (
-      <View
-        style={[styles.container, { backgroundColor: theme.colors.success }]}
+      <LinearGradient
+        colors={[theme.colors.success, theme.colors.surfaceVariant]}
+        style={styles.gradient}
       >
-        <Text variant="headlineLarge" style={{ color: theme.colors.onSuccess }}>
-          {status}!
-        </Text>
-      </View>
+        <View style={styles.container}>
+          <View style={styles.icon}>
+            <Icon
+              source="check-circle-outline"
+              size={100}
+              color={theme.colors.onSuccess}
+            />
+          </View>
+          <Text
+            variant="headlineLarge"
+            style={[styles.text, { color: theme.colors.onSuccess }]}
+          >
+            {status}!
+          </Text>
+        </View>
+      </LinearGradient>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text variant="labelLarge">{status}</Text>
-      <View style={styles.progressBarContainer}>
-        <ProgressBar progress={progress} color={theme.colors.primary} />
-      </View>
-    </SafeAreaView>
+    <LinearGradient
+      colors={[theme.colors.surface, theme.colors.surfaceVariant]}
+      style={styles.gradient}
+    >
+      <SafeAreaView style={styles.container}>
+        <Text
+          style={[styles.statusText, { color: theme.colors.onSurface }]}
+          variant="titleLarge"
+        >
+          {status}
+        </Text>
+        <View style={styles.progressBarContainer}>
+          <ProgressBar
+            progress={progress}
+            color={theme.colors.primary}
+            style={styles.progressBar}
+          />
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 20,
+    height: "100%",
+  },
+  statusText: {
+    fontSize: 24,
+    fontWeight: "600",
+    marginBottom: 20,
   },
   progressBarContainer: {
-    width: "90%",
-    marginTop: 20,
+    width: "80%",
+    borderRadius: 10,
+    padding: 10,
+  },
+  progressBar: {
+    height: 12,
+    borderRadius: 6,
+  },
+  icon: {
+    marginBottom: 20,
+  },
+  text: {
+    fontSize: 36,
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

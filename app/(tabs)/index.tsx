@@ -1,45 +1,49 @@
-import { W3mButton } from "@web3modal/wagmi-react-native";
 import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import { useAppTheme } from "@/theme/paperTheme";
 
 export default function HomeScreen() {
+  const theme = useAppTheme();
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.text} variant="titleLarge">
-        Radix
-      </Text>
-      <View style={styles.buttonContainer}>
+    <LinearGradient
+      colors={[
+        theme.colors.primaryContainer,
+        theme.colors.secondaryContainer,
+        theme.colors.tertiaryContainer,
+      ]}
+      style={styles.gradient}
+    >
+      <SafeAreaView style={styles.container}>
         <Button
           contentStyle={styles.buttonContent}
-          mode="elevated"
+          mode="contained"
           onPress={() => router.navigate("/verify")}
+          labelStyle={[styles.buttonLabel, { color: theme.colors.onPrimary }]}
         >
           Verify
         </Button>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    alignItems: "center",
+  gradient: {
     height: "100%",
   },
-  text: {
-    margin: 20,
-  },
-  buttonContainer: {
-    display: "flex",
-    justifyContent: "center",
+  container: {
     alignItems: "center",
+    justifyContent: "center",
     height: "100%",
   },
   buttonContent: {
     height: 50,
     width: 200,
+  },
+  buttonLabel: {
+    fontSize: 18,
   },
 });
