@@ -16,15 +16,25 @@ import { useReadContract } from "wagmi";
 import { abi, address } from "@/constants/RadixContract";
 import { privateKeyToAddress } from "viem/accounts";
 import { LinearGradient } from "expo-linear-gradient";
+import { Authentic } from "@/components/Scan/Authentic";
+
+type Metadata = {
+  id: string;
+  description?: string;
+  external_url?: string;
+  image?: string;
+  name?: string;
+};
 
 export default function VerifyScreen() {
   const [data, setData] = useState<string | null>(null);
   const [recoveredAddress, setRecoveredAddress] = useState<
     `0x${string}` | null
   >(null);
+  const [metadata, setMetadata] = useState<Metadata | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<number>(0.0);
-  const [status, setStatus] = useState<string | null>("Status");
+  const [status, setStatus] = useState<string | null>("Tag is authentic");
   const [permission, requestPermission] = useCameraPermissions();
 
   const theme = useAppTheme();
@@ -36,6 +46,26 @@ export default function VerifyScreen() {
     args: [recoveredAddress as `0x${string}`],
     query: {
       enabled: recoveredAddress !== null,
+    },
+  });
+
+  const { data: tokenId } = useReadContract({
+    abi,
+    address,
+    functionName: "tokenOfOwnerByIndex",
+    args: [recoveredAddress as `0x${string}`, 1n],
+    query: {
+      enabled: balance !== undefined && balance > 0n,
+    },
+  });
+
+  const { data: tokenURI } = useReadContract({
+    abi,
+    address,
+    functionName: "tokenURI",
+    args: [tokenId as bigint],
+    query: {
+      enabled: tokenId !== undefined,
     },
   });
 
@@ -114,6 +144,19 @@ export default function VerifyScreen() {
     }
   }, [balance]);
 
+  useEffect(() => {
+    if (tokenURI === undefined) return;
+
+    try {
+      const decodedString = atob(tokenURI);
+      const _metadata = JSON.parse(decodedString);
+
+      setMetadata(_metadata);
+    } catch (error: any) {
+      console.error(error);
+    }
+  }, [tokenURI]);
+
   if (error) {
     return (
       <LinearGradient
@@ -155,26 +198,12 @@ export default function VerifyScreen() {
 
   if (status === "Tag is authentic") {
     return (
-      <LinearGradient
-        colors={[theme.colors.success, theme.colors.surfaceVariant]}
-        style={styles.gradient}
-      >
-        <View style={styles.container}>
-          <View style={styles.icon}>
-            <Icon
-              source="check-circle-outline"
-              size={100}
-              color={theme.colors.onSuccess}
-            />
-          </View>
-          <Text
-            variant="headlineLarge"
-            style={[styles.text, { color: theme.colors.onSuccess }]}
-          >
-            {status}!
-          </Text>
-        </View>
-      </LinearGradient>
+      <Authentic
+        status={status}
+        id={metadata?.id}
+        name={metadata?.name}
+        description={metadata?.description}
+      />
     );
   }
 
@@ -211,7 +240,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 20,
-    height: "100%",
   },
   statusText: {
     fontSize: 24,
