@@ -1,153 +1,137 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { View, Image, StyleSheet, Animated } from "react-native";
-import { Icon, Text } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import { Button, Card, Icon, Text } from "react-native-paper";
 import { useAppTheme } from "@/theme/paperTheme";
-import { useEffect, useRef, useState } from "react";
+import { router } from "expo-router";
 
 interface AuthenticProps {
-  status: string;
   id?: string;
   name?: string;
   description?: string;
+  image?: string;
 }
 
-export function Authentic({ status, id, name, description }: AuthenticProps) {
-  const [showProductInfo, setShowProductInfo] = useState(false);
-
-  const fadeInAnim = useRef(new Animated.Value(0)).current;
-  const fadeOutAnim = useRef(new Animated.Value(1)).current;
-
+export function Authentic({ id, name, description, image }: AuthenticProps) {
   const theme = useAppTheme();
-
-  useEffect(() => {
-    const fadeOutTimer = setTimeout(() => {
-      Animated.timing(fadeOutAnim, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }).start();
-    }, 1000);
-
-    const fadeInTimer = setTimeout(() => {
-      setShowProductInfo(true);
-
-      Animated.timing(fadeInAnim, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
-      }).start();
-    }, 2000);
-
-    return () => {
-      clearTimeout(fadeInTimer);
-      clearTimeout(fadeOutTimer);
-    };
-  }, [fadeInAnim]);
 
   return (
     <LinearGradient
-      colors={[theme.colors.success, theme.colors.surfaceVariant]}
-      style={styles.gradient}
+      colors={[theme.colors.success, theme.colors.surface]}
+      style={styles.background}
     >
       <View style={styles.container}>
-        {!showProductInfo && (
-          <View style={styles.icon}>
-            <Icon
-              source="check-circle-outline"
-              size={100}
-              color={theme.colors.onSuccess}
-            />
-          </View>
-        )}
-        {!showProductInfo && (
-          <Text
-            variant="headlineLarge"
-            style={[styles.text, { color: theme.colors.onSuccess }]}
-          >
-            {status}!
-          </Text>
-        )}
+        {/* Icon for success */}
+        <View style={styles.icon}>
+          <Icon
+            source="check-circle-outline"
+            size={64}
+            color={theme.colors.onSuccess}
+          />
 
-        {/* Product Information Section */}
-        {showProductInfo && (
-          <Animated.View
-            style={[
-              styles.productContainer,
-              { backgroundColor: theme.colors.surface },
-              { opacity: fadeInAnim },
-            ]}
-          >
-            <Image
-              src="https://picsum.photos/700"
-              style={styles.productImage}
-              resizeMode="contain"
-            />
-            <Text style={[styles.productId, { color: theme.colors.onSurface }]}>
-              ID: {id}
-            </Text>
-            <Text style={[styles.productName, { color: theme.colors.primary }]}>
-              {name}
-            </Text>
-            <Text
-              style={[
-                styles.productDescription,
-                { color: theme.colors.onSurface },
-              ]}
-            >
-              {description}
-            </Text>
-          </Animated.View>
-        )}
+          {/* Success Message */}
+          <Text style={[styles.successText, { color: theme.colors.onSuccess }]}>
+            Authentic Product
+          </Text>
+        </View>
+
+        {/* Product Card */}
+        <Card style={styles.productCard}>
+          {image && (
+            <Card.Cover source={{ uri: image }} style={styles.productImage} />
+          )}
+          <Card.Content>
+            {name && <Text style={styles.productName}>{name}</Text>}
+            {id && (
+              <Text style={[styles.productId, { color: theme.colors.primary }]}>
+                ID: {id}
+              </Text>
+            )}
+            {description && (
+              <Text style={styles.productDescription}>{description}</Text>
+            )}
+          </Card.Content>
+        </Card>
+
+        {/* Button */}
+        <Button
+          mode="contained"
+          onPress={() => router.back()}
+          style={styles.button}
+          labelStyle={styles.buttonLabel}
+          buttonColor={theme.colors.secondary}
+          textColor={theme.colors.onSecondary}
+        >
+          Go Back
+        </Button>
       </View>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: {
+  background: {
     flex: 1,
   },
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 20,
-  },
-  icon: {
-    marginBottom: 20,
-  },
-  text: {
-    fontSize: 36,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  productContainer: {
+    justifyContent: "space-around",
     alignItems: "center",
     padding: 20,
-    borderRadius: 12,
+  },
+  icon: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  successText: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textShadowColor: "rgba(0, 0, 0, 0.2)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
+  },
+  productCard: {
+    width: "90%",
+    borderRadius: 15,
+    elevation: 4, // Adds a shadow for Android
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 3,
-    marginTop: 20,
+    shadowRadius: 5, // For iOS shadow
+    marginBottom: 20,
   },
   productImage: {
-    width: 80,
-    height: 80,
-    marginBottom: 10,
-  },
-  productName: {
-    fontSize: 22,
-    fontWeight: "600",
-    marginBottom: 5,
+    height: 200,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
   },
   productId: {
+    textAlign: "center",
     fontSize: 14,
-    marginBottom: 8,
+    marginTop: 8,
+    opacity: 0.7,
+  },
+  productName: {
+    textAlign: "center",
+    fontSize: 22,
+    fontWeight: "bold",
+    marginTop: 15,
   },
   productDescription: {
-    fontSize: 16,
     textAlign: "center",
+    fontSize: 16,
+    marginTop: 10,
+    opacity: 0.8,
+  },
+  button: {
+    marginTop: 20,
+    width: "90%",
+    paddingVertical: 10,
+    borderRadius: 25,
+    elevation: 4,
+  },
+  buttonLabel: {
+    fontSize: 18,
   },
 });

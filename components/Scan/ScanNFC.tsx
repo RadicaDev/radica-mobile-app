@@ -61,7 +61,7 @@ export function Scan({ setData }: ScanProps) {
       }
     } catch (e) {
       await nfcManager.invalidateSessionIOS();
-      console.error(e);
+      console.log(e);
     } finally {
       await nfcManager.cancelTechnologyRequest();
     }
