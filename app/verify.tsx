@@ -1,8 +1,9 @@
-import { useCameraPermissions } from "expo-camera";
-import { Loading } from "@/components/Scan/Loading";
-import { Permissions } from "@/components/Scan/Permissions";
+// import { useCameraPermissions } from "expo-camera";
+// import { Loading } from "@/components/Scan/Loading";
+// import { Permissions } from "@/components/Scan/Permissions";
 import { useEffect, useState } from "react";
-import { Scan } from "@/components/Scan/Scan";
+// import { Scan } from "@/components/Scan/Scan";
+import { Scan } from "@/components/Scan/ScanNFC";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon, ProgressBar, Text } from "react-native-paper";
 import { StyleSheet } from "react-native";
@@ -35,7 +36,7 @@ export default function VerifyScreen() {
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<number>(0.0);
   const [status, setStatus] = useState<string | null>("Tag is authentic");
-  const [permission, requestPermission] = useCameraPermissions();
+  // const [permission, requestPermission] = useCameraPermissions();
 
   const theme = useAppTheme();
 
@@ -53,7 +54,7 @@ export default function VerifyScreen() {
     abi,
     address,
     functionName: "tokenOfOwnerByIndex",
-    args: [recoveredAddress as `0x${string}`, 1n],
+    args: [recoveredAddress as `0x${string}`, 0n],
     query: {
       enabled: balance !== undefined && balance > 0n,
     },
@@ -182,15 +183,15 @@ export default function VerifyScreen() {
     );
   }
 
-  if (!permission) {
-    // Camera permissions are still loading.
-    return <Loading />;
-  }
-
-  if (!permission.granted) {
-    // Camera permissions are not granted yet.
-    return <Permissions requestPermission={requestPermission} />;
-  }
+  // if (!permission) {
+  //   // Camera permissions are still loading.
+  //   return <Loading />;
+  // }
+  //
+  // if (!permission.granted) {
+  //   // Camera permissions are not granted yet.
+  //   return <Permissions requestPermission={requestPermission} />;
+  // }
 
   if (!data) {
     return <Scan setData={setData} />;

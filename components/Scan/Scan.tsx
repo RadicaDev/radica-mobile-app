@@ -1,8 +1,7 @@
 import { BarcodeScanningResult, CameraView } from "expo-camera";
-import { router } from "expo-router";
 import { useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
-import { ActivityIndicator, Button, Text } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
