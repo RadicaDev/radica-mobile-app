@@ -14,7 +14,11 @@ type Metadata = {
 };
 
 export default function VerifyScreen() {
-  const { address: recoveredAddress } = useLocalSearchParams();
+  const { tagData }: { tagData: string } = useLocalSearchParams();
+  const [recoveredAddress, proof] = tagData.split("-") as [
+    `0x${string}`,
+    `0x${string}`,
+  ];
 
   const {
     data: balance,
@@ -24,7 +28,7 @@ export default function VerifyScreen() {
     abi,
     address,
     functionName: "balanceOf",
-    args: [recoveredAddress as `0x${string}`],
+    args: [recoveredAddress],
   });
 
   const {
@@ -35,7 +39,7 @@ export default function VerifyScreen() {
     abi,
     address,
     functionName: "tokenOfOwnerByIndex",
-    args: [recoveredAddress as `0x${string}`, 0n],
+    args: [recoveredAddress, 0n],
     query: {
       enabled: balance !== undefined && balance > 0n,
     },
@@ -89,6 +93,7 @@ export default function VerifyScreen() {
         name={metadata?.name}
         description={metadata?.description}
         image={metadata?.image}
+        proof={proof}
       />
     );
   }

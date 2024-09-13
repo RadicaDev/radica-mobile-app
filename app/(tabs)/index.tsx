@@ -54,9 +54,11 @@ async function scanTag(
 
       const uid = res.slice(0, 8);
       const sig = res.slice(0x4 * 4, 0x4 * 4 + 65);
+      const proof = res.slice(0x4 * 4 + 68, 0x4 * 4 + 68 + 32);
 
       const uidHex: `0x${string}` = `0x${uid.map((byte) => byte.toString(16).padStart(2, "0")).join("")}`;
       const sigHex: `0x${string}` = `0x${sig.map((byte) => byte.toString(16).padStart(2, "0")).join("")}`;
+      const proofHex: `0x${string}` = `0x${proof.map((byte) => byte.toString(16).padStart(2, "0")).join("")}`;
 
       let isVerified = false;
       try {
@@ -73,7 +75,7 @@ async function scanTag(
       if (isVerified) {
         await nfcManager.setAlertMessageIOS("Signature verified!");
         recoveredAddress = privateKeyToAddress(keccak256(uidHex));
-        resolve(recoveredAddress);
+        resolve(`${recoveredAddress}-${proofHex}`);
       } else {
         await nfcManager.invalidateSessionWithErrorIOS("Invalid Signature");
         reject("Invalid Signature");

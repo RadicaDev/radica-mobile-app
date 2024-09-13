@@ -9,9 +9,16 @@ interface AuthenticProps {
   name?: string;
   description?: string;
   image?: string;
+  proof: `0x${string}`;
 }
 
-export function Authentic({ id, name, description, image }: AuthenticProps) {
+export function Authentic({
+  id,
+  name,
+  description,
+  image,
+  proof,
+}: AuthenticProps) {
   const theme = useAppTheme();
 
   return (
@@ -49,6 +56,7 @@ export function Authentic({ id, name, description, image }: AuthenticProps) {
             {description && (
               <Text style={styles.productDescription}>{description}</Text>
             )}
+            <Text style={styles.productDescription}>{proof}</Text>
           </Card.Content>
         </Card>
 
