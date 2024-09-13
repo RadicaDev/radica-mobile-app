@@ -1,26 +1,62 @@
-import { View, StyleSheet } from "react-native";
-import { ActivityIndicator, Text } from "react-native-paper";
+import { useAppTheme } from "@/theme/paperTheme";
+import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView, StyleSheet, View } from "react-native";
+import { ProgressBar, Text } from "react-native-paper";
 
-export function Loading() {
+interface LoadingProps {
+  status: string;
+  progress: number;
+}
+
+export function Loading({ status, progress }: LoadingProps) {
+  const theme = useAppTheme();
+
   return (
-    <View style={styles.container}>
-      <ActivityIndicator animating={true} size="large" style={styles.loader} />
-      <Text variant="labelLarge">Loading, please wait...</Text>
-    </View>
+    <LinearGradient
+      colors={[theme.colors.surface, theme.colors.surfaceVariant]}
+      style={styles.gradient}
+    >
+      <SafeAreaView style={styles.container}>
+        <Text
+          style={[styles.statusText, { color: theme.colors.onSurface }]}
+          variant="titleLarge"
+        >
+          {status}
+        </Text>
+        <View style={styles.progressBarContainer}>
+          <ProgressBar
+            progress={progress}
+            color={theme.colors.primary}
+            style={styles.progressBar}
+          />
+        </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 20,
   },
-  loader: {
+  statusText: {
+    fontSize: 24,
+    fontWeight: "600",
     marginBottom: 20,
   },
-  text: {
-    fontSize: 18,
-    color: "#333", // Optional: change to any color you prefer
+  progressBarContainer: {
+    width: "80%",
+    borderRadius: 10,
+    padding: 10,
+  },
+  progressBar: {
+    height: 12,
+    borderRadius: 6,
   },
 });

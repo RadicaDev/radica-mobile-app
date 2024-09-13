@@ -1,11 +1,8 @@
 import { Authentic } from "@/components/Scan/Authentic";
+import { Error } from "@/components/Scan/Error";
+import { Loading } from "@/components/Scan/Loading";
 import { abi, address } from "@/constants/RadixContract";
-import { useAppTheme } from "@/theme/paperTheme";
-import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
-import { StyleSheet, View } from "react-native";
-import { Icon, ProgressBar, Text } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useReadContract } from "wagmi";
 
 type Metadata = {
@@ -18,8 +15,6 @@ type Metadata = {
 
 export default function VerifyScreen() {
   const { address: recoveredAddress } = useLocalSearchParams();
-
-  const theme = useAppTheme();
 
   const {
     data: balance,
@@ -71,53 +66,11 @@ export default function VerifyScreen() {
   });
 
   if (balance === 0n) {
-    return (
-      <LinearGradient
-        colors={[theme.colors.error, theme.colors.surfaceVariant]}
-        style={styles.gradient}
-      >
-        <View style={styles.container}>
-          <View style={styles.icon}>
-            <Icon
-              source="alert-circle-outline"
-              size={100}
-              color={theme.colors.onError}
-            />
-          </View>
-          <Text
-            variant="headlineLarge"
-            style={[styles.text, { color: theme.colors.onError }]}
-          >
-            Product Not Authentic
-          </Text>
-        </View>
-      </LinearGradient>
-    );
+    return <Error text="Product is not Authentic" />;
   }
 
   if (isErrorBalance || isErrorTokenId || isErrorMetadata) {
-    return (
-      <LinearGradient
-        colors={[theme.colors.error, theme.colors.surfaceVariant]}
-        style={styles.gradient}
-      >
-        <View style={styles.container}>
-          <View style={styles.icon}>
-            <Icon
-              source="alert-circle-outline"
-              size={100}
-              color={theme.colors.onError}
-            />
-          </View>
-          <Text
-            variant="headlineLarge"
-            style={[styles.text, { color: theme.colors.onError }]}
-          >
-            An Error Occurred
-          </Text>
-        </View>
-      </LinearGradient>
-    );
+    return <Error text="An Error Occurred" />;
   }
 
   if (isLoadingBalance || isLoadingTokenId || isLoadingMetadata) {
@@ -126,28 +79,7 @@ export default function VerifyScreen() {
       : "Loading metadata...";
     const progress = isLoadingBalance ? 0 : isLoadingTokenId ? 0.5 : 1;
 
-    return (
-      <LinearGradient
-        colors={[theme.colors.surface, theme.colors.surfaceVariant]}
-        style={styles.gradient}
-      >
-        <SafeAreaView style={styles.container}>
-          <Text
-            style={[styles.statusText, { color: theme.colors.onSurface }]}
-            variant="titleLarge"
-          >
-            {status}
-          </Text>
-          <View style={styles.progressBarContainer}>
-            <ProgressBar
-              progress={progress}
-              color={theme.colors.primary}
-              style={styles.progressBar}
-            />
-          </View>
-        </SafeAreaView>
-      </LinearGradient>
-    );
+    return <Loading status={status} progress={progress} />;
   }
 
   if (metadata) {
@@ -161,37 +93,3 @@ export default function VerifyScreen() {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 20,
-  },
-  statusText: {
-    fontSize: 24,
-    fontWeight: "600",
-    marginBottom: 20,
-  },
-  progressBarContainer: {
-    width: "80%",
-    borderRadius: 10,
-    padding: 10,
-  },
-  progressBar: {
-    height: 12,
-    borderRadius: 6,
-  },
-  icon: {
-    marginBottom: 20,
-  },
-  text: {
-    fontSize: 36,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-});

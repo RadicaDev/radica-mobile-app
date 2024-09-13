@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Animated, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import nfcManager, { NfcEvents, NfcTech } from "react-native-nfc-manager";
