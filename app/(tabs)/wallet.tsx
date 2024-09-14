@@ -15,7 +15,7 @@ export default function WalletScreen() {
       ]}
     >
       <SafeAreaView style={styles.container}>
-        <W3mButton />
+        <W3mButton balance="show" />
       </SafeAreaView>
     </LinearGradient>
   );

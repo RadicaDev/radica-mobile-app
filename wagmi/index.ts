@@ -2,7 +2,7 @@ import {
   Web3ModalOptions,
   defaultWagmiConfig,
 } from "@web3modal/wagmi-react-native";
-import { localhost } from "viem/chains";
+import { hardhat } from "viem/chains";
 import appSettings from "../app-settings.json";
 
 const projectId = "dace2ce5fa77568df22525a38edf07e8";
@@ -20,7 +20,7 @@ const metadata = {
 
 export const chains = [
   {
-    ...localhost,
+    ...hardhat,
     rpcUrls: {
       default: { http: [appSettings.rpcUrl] },
     },
@@ -32,7 +32,7 @@ export const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 const modalOptions: Web3ModalOptions = {
   projectId,
   wagmiConfig,
-  defaultChain: localhost,
+  defaultChain: hardhat,
   enableAnalytics: false,
 };
 

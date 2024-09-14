@@ -1,7 +1,8 @@
 import { useAppTheme } from "@/theme/paperTheme";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
-import { Icon, Text } from "react-native-paper";
+import { Button, Icon, Text } from "react-native-paper";
 
 interface ErrorProps {
   text: string;
@@ -22,13 +23,23 @@ export function Error({ text }: ErrorProps) {
             size={100}
             color={theme.colors.onError}
           />
+          <Text
+            variant="headlineLarge"
+            style={[styles.text, { color: theme.colors.onError }]}
+          >
+            {text}
+          </Text>
         </View>
-        <Text
-          variant="headlineLarge"
-          style={[styles.text, { color: theme.colors.onError }]}
+        <Button
+          mode="contained"
+          onPress={() => router.back()}
+          style={styles.button}
+          labelStyle={styles.buttonLabel}
+          buttonColor={theme.colors.secondary}
+          textColor={theme.colors.onSecondary}
         >
-          {text}
-        </Text>
+          Go Back
+        </Button>
       </View>
     </LinearGradient>
   );
@@ -40,16 +51,28 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
+    paddingVertical: 48,
   },
   icon: {
+    alignItems: "center",
     marginBottom: 20,
   },
   text: {
     fontSize: 36,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  button: {
+    marginVertical: 48,
+    width: "90%",
+    paddingVertical: 10,
+    borderRadius: 25,
+    elevation: 4,
+  },
+  buttonLabel: {
+    fontSize: 18,
   },
 });

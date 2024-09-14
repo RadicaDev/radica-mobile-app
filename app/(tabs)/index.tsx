@@ -110,7 +110,7 @@ export default function HomeScreen() {
     }
 
     try {
-      const data = await scanTag(0, 0x1c * 4);
+      const data = await scanTag(0, 0x1d * 4);
       router.navigate(`/verify/${data}`);
     } catch (e) {
       console.log(e);
