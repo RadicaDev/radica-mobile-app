@@ -10,12 +10,17 @@ import { keccak256, verifyMessage } from "viem";
 import signerAddr from "@/constants/SignerAddress";
 import { privateKeyToAddress } from "viem/accounts";
 
+type ScanTagResult = {
+  recoveredAddress: `0x${string}`;
+  proof: `0x${string}`;
+};
+
 async function scanTag(
   blockNumber: number,
   length: number,
   blockSize = 4,
   packetSize = 16,
-): Promise<string> {
+): Promise<ScanTagResult> {
   return new Promise(async (resolve, reject) => {
     if (packetSize % blockSize !== 0) {
       console.error("packetSize must be a multiple of blockSize");
@@ -75,7 +80,7 @@ async function scanTag(
       if (isVerified) {
         await nfcManager.setAlertMessageIOS("Signature verified!");
         recoveredAddress = privateKeyToAddress(keccak256(uidHex));
-        resolve(`${recoveredAddress}-${proofHex}`);
+        resolve({ recoveredAddress, proof: proofHex });
       } else {
         await nfcManager.invalidateSessionWithErrorIOS("Invalid Signature");
         reject("Invalid Signature");
@@ -110,8 +115,11 @@ export default function HomeScreen() {
     }
 
     try {
-      const data = await scanTag(0, 0x1d * 4);
-      router.navigate(`/verify/${data}`);
+      const tag = await scanTag(0, 0x1d * 4);
+      router.navigate({
+        pathname: "../verify/[...tag]",
+        params: tag,
+      });
     } catch (e) {
       console.log(e);
     }

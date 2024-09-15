@@ -53,7 +53,7 @@ export default function RootLayout() {
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen
-                name="verify/[tagData]"
+                name="verify/[...tag]"
                 options={{ headerShown: false, presentation: "modal" }}
               />
               <Stack.Screen name="+not-found" />

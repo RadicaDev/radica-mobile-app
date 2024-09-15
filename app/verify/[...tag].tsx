@@ -14,11 +14,11 @@ type Metadata = {
 };
 
 export default function VerifyScreen() {
-  const { tagData }: { tagData: string } = useLocalSearchParams();
-  const [recoveredAddress, proof] = tagData.split("-") as [
-    `0x${string}`,
-    `0x${string}`,
-  ];
+  const {
+    recoveredAddress,
+    proof,
+  }: { recoveredAddress: `0x${string}`; proof: `0x${string}` } =
+    useLocalSearchParams();
 
   const {
     data: balance,
