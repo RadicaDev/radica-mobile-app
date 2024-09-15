@@ -3,7 +3,7 @@ import {
   defaultWagmiConfig,
 } from "@web3modal/wagmi-react-native";
 import { hardhat } from "viem/chains";
-import appSettings from "../app-settings.json";
+import { appSettings } from "../app-settings";
 
 const projectId = "dace2ce5fa77568df22525a38edf07e8";
 
@@ -22,7 +22,7 @@ export const chains = [
   {
     ...hardhat,
     rpcUrls: {
-      default: { http: [appSettings.rpcUrl] },
+      default: { http: [appSettings[hardhat.id].rpcUrl] },
     },
   },
 ] as const;

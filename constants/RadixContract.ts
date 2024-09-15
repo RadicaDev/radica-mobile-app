@@ -1,4 +1,6 @@
-export const address = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+import { appSettings } from "@/app-settings";
+
+export const address = appSettings[31337].tagContractAddress;
 
 export const abi = [
   {
