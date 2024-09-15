@@ -166,7 +166,6 @@ export function Authentic({
               labelStyle={styles.buttonLabel}
               buttonColor={theme.colors.primary}
               textColor={theme.colors.onPrimary}
-              disabled={isPending}
             >
               Connect Wallet
             </Button>
