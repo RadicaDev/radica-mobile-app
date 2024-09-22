@@ -1,6 +1,6 @@
 import { appSettings } from "@/app-settings";
 
-export const address = appSettings[31337].tagContractAddress;
+export const address = appSettings[31337].tagContractAddress as `0x${string}`;
 
 export const abi = [
   {
