@@ -1,13 +1,12 @@
 import { useAppTheme } from "@/theme/paperTheme";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
 import {
   StyleSheet,
   ScrollView,
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import { Button, Card, Paragraph, Text, Title } from "react-native-paper";
+import { Card, Paragraph, Text, Title } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAccount, useReadContract, useReadContracts } from "wagmi";
 import {
@@ -18,6 +17,7 @@ import {
   abi as abiProperty,
   address as addressProperty,
 } from "@/constants/RadixPropertyContract";
+import ConnectButton from "@/components/Wallet/ConnectButton";
 
 type Metadata = {
   id: string;
@@ -146,14 +146,7 @@ export default function ProductsScreen() {
         style={styles.gradient}
       >
         <SafeAreaView style={styles.container}>
-          <Button
-            contentStyle={styles.buttonContent}
-            mode="contained"
-            onPress={() => router.navigate("/wallet")}
-            labelStyle={[styles.buttonLabel, { color: theme.colors.onPrimary }]}
-          >
-            Connect Wallet
-          </Button>
+          <ConnectButton>Connect Wallet</ConnectButton>
         </SafeAreaView>
       </LinearGradient>
     );
@@ -178,7 +171,13 @@ export default function ProductsScreen() {
           />
         }
       >
-        <SafeAreaView style={styles.container}>{productsCards}</SafeAreaView>
+        {productsCards?.length ? (
+          <SafeAreaView style={styles.container}>{productsCards}</SafeAreaView>
+        ) : (
+          <SafeAreaView>
+            <Text variant="headlineMedium">No products owned</Text>
+          </SafeAreaView>
+        )}
       </ScrollView>
     </LinearGradient>
   );
@@ -187,6 +186,7 @@ export default function ProductsScreen() {
 const styles = StyleSheet.create({
   gradient: {
     height: "100%",
+    alignItems: "center",
   },
   scrollView: {
     alignItems: "center",

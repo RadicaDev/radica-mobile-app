@@ -17,7 +17,7 @@ import { theme } from "@/theme/paperTheme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { WagmiProvider } from "wagmi";
-import { createWeb3Modal, Web3Modal } from "@web3modal/wagmi-react-native";
+import { AppKit, createAppKit } from "@reown/appkit-wagmi-react-native";
 import modalOptions, { wagmiConfig } from "@/wagmi";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -25,7 +25,7 @@ SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
-createWeb3Modal(modalOptions);
+createAppKit(modalOptions);
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -58,8 +58,8 @@ export default function RootLayout() {
               />
               <Stack.Screen name="+not-found" />
             </Stack>
-            <Web3Modal />
           </PaperProvider>
+          <AppKit />
         </QueryClientProvider>
       </WagmiProvider>
     </ThemeProvider>

@@ -1,8 +1,9 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
-import { W3mButton } from "@web3modal/wagmi-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useAppTheme } from "@/theme/paperTheme";
+import { AppKitButton } from "@reown/appkit-wagmi-react-native";
+import ConnectButton from "@/components/Wallet/ConnectButton";
 
 export default function WalletScreen() {
   const theme = useAppTheme();
@@ -15,7 +16,8 @@ export default function WalletScreen() {
       ]}
     >
       <SafeAreaView style={styles.container}>
-        <W3mButton balance="show" />
+        {/*<AppKitButton balance="show" label="Connect Wallet" />*/}
+        <ConnectButton>Connect Wallet</ConnectButton>
       </SafeAreaView>
     </LinearGradient>
   );

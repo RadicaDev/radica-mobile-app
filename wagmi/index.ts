@@ -1,7 +1,5 @@
-import {
-  Web3ModalOptions,
-  defaultWagmiConfig,
-} from "@web3modal/wagmi-react-native";
+import { Web3ModalOptions } from "@web3modal/wagmi-react-native";
+import { defaultWagmiConfig } from "@reown/appkit-wagmi-react-native";
 import { hardhat } from "viem/chains";
 import { appSettings } from "../app-settings";
 
