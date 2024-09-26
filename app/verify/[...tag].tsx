@@ -1,6 +1,6 @@
-import { Authentic } from "@/components/Scan/Authentic";
-import { Error } from "@/components/Scan/Error";
-import { Loading } from "@/components/Scan/Loading";
+import { Authentic } from "@/components/Verify/Authentic";
+import { Error } from "@/components/Verify/Error";
+import { Loading } from "@/components/Verify/Loading";
 import { abi, address } from "@/constants/RadixContract";
 import { useLocalSearchParams } from "expo-router";
 import { useReadContract } from "wagmi";

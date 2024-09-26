@@ -1,14 +1,10 @@
 import { router } from "expo-router";
-import { StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
-import { useAppTheme } from "@/theme/paperTheme";
 import { useEffect, useState } from "react";
 import nfcManager, { NfcTech } from "react-native-nfc-manager";
 import { keccak256, verifyMessage } from "viem";
 import signerAddr from "@/constants/SignerAddress";
 import { privateKeyToAddress } from "viem/accounts";
+import { Home } from "@/components/Home/Home";
 
 type ScanTagResult = {
   recoveredAddress: `0x${string}`;
@@ -106,8 +102,6 @@ async function scanTag(
 export default function HomeScreen() {
   const [hasNfc, setHasNfc] = useState<boolean | null>(false);
 
-  const theme = useAppTheme();
-
   const handlePress = async () => {
     if (!hasNfc) {
       alert("NFC is not supported on this device");
@@ -137,44 +131,5 @@ export default function HomeScreen() {
     checkNfcSupport();
   }, []);
 
-  return (
-    <LinearGradient
-      colors={[
-        theme.colors.primaryContainer,
-        theme.colors.secondaryContainer,
-        theme.colors.tertiaryContainer,
-      ]}
-      style={styles.gradient}
-    >
-      <SafeAreaView style={styles.container}>
-        <Button
-          contentStyle={styles.buttonContent}
-          mode="contained"
-          onPress={handlePress}
-          labelStyle={[styles.buttonLabel, { color: theme.colors.onPrimary }]}
-          disabled={hasNfc === null}
-        >
-          Verify
-        </Button>
-      </SafeAreaView>
-    </LinearGradient>
-  );
+  return <Home handlePress={handlePress} hasNfc={hasNfc} />;
 }
-
-const styles = StyleSheet.create({
-  gradient: {
-    height: "100%",
-  },
-  container: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100%",
-  },
-  buttonContent: {
-    height: 50,
-    width: 200,
-  },
-  buttonLabel: {
-    fontSize: 18,
-  },
-});
