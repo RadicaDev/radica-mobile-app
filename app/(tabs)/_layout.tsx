@@ -19,15 +19,11 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="my-products"
+        name="online"
         options={{
-          title: "My Products",
+          title: "Online",
           tabBarIcon: ({ color, focused }) => (
-            <Icon
-              source={focused ? "basket" : "basket-outline"}
-              size={28}
-              color={color}
-            />
+            <Icon source={focused ? "web" : "web"} size={28} color={color} />
           ),
         }}
       />

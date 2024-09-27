@@ -17,7 +17,7 @@ interface AuthenticProps {
   description?: string;
   image?: string;
   tokenId: bigint;
-  proof: `0x${string}`;
+  proof?: `0x${string}`;
 }
 
 export function Authentic({
@@ -59,12 +59,14 @@ export function Authentic({
       setShowConnect(true);
       return;
     }
-    writeContract({
-      abi,
-      address: contractAddress,
-      functionName: "claimProperty",
-      args: [tokenId, proof, `Property of ${tokenId.toString()}`],
-    });
+    if (proof) {
+      writeContract({
+        abi,
+        address: contractAddress,
+        functionName: "claimProperty",
+        args: [tokenId, proof, `Property of ${tokenId.toString()}`],
+      });
+    }
   };
 
   return (
@@ -170,17 +172,19 @@ export function Authentic({
               Connect Wallet
             </Button>
           ) : (
-            <Button
-              mode="contained"
-              onPress={handleClaimProperty}
-              style={styles.button}
-              labelStyle={styles.buttonLabel}
-              buttonColor={theme.colors.primary}
-              textColor={theme.colors.onPrimary}
-              disabled={isPending}
-            >
-              Claim Product
-            </Button>
+            proof && (
+              <Button
+                mode="contained"
+                onPress={handleClaimProperty}
+                style={styles.button}
+                labelStyle={styles.buttonLabel}
+                buttonColor={theme.colors.primary}
+                textColor={theme.colors.onPrimary}
+                disabled={isPending}
+              >
+                Claim Product
+              </Button>
+            )
           ))}
         <Button
           mode="contained"

@@ -17,7 +17,7 @@ export default function VerifyScreen() {
   const {
     recoveredAddress,
     proof,
-  }: { recoveredAddress: `0x${string}`; proof: `0x${string}` } =
+  }: { recoveredAddress: `0x${string}`; proof?: `0x${string}` } =
     useLocalSearchParams();
 
   const {
