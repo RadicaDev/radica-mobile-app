@@ -1,13 +1,11 @@
-import { StyleSheet } from "react-native";
 import {
   AccountButton,
-  AppKitButton,
   useAppKit,
   useAppKitState,
 } from "@reown/appkit-wagmi-react-native";
-import { Button, ButtonProps } from "react-native-paper";
-import { useAppTheme } from "@/theme/paperTheme";
+import { ButtonProps } from "react-native-paper";
 import { useAccount } from "wagmi";
+import StyledButton from "../Shared/StyledButton";
 
 type ConnectButtonProps = Omit<ButtonProps, "onPress" | "disable">;
 
@@ -17,7 +15,6 @@ export default function ConnectButton({
   labelStyle,
   children,
 }: ConnectButtonProps) {
-  const theme = useAppTheme();
   const { open } = useAppKit();
   const { open: isOpen } = useAppKitState();
   const { address } = useAccount();
@@ -31,28 +28,15 @@ export default function ConnectButton({
   }
 
   return (
-    <Button
-      contentStyle={[styles.buttonContent, contentStyle]}
-      mode={mode ?? "contained"}
+    <StyledButton
+      variant="primary"
+      contentStyle={contentStyle}
+      mode={mode}
       onPress={handlePress}
-      labelStyle={[
-        styles.buttonLabel,
-        { color: theme.colors.onPrimary },
-        labelStyle,
-      ]}
+      labelStyle={labelStyle}
       disabled={isOpen}
     >
       {!isOpen ? children : "Connecting..."}
-    </Button>
+    </StyledButton>
   );
 }
-
-const styles = StyleSheet.create({
-  buttonContent: {
-    height: 50,
-    width: 200,
-  },
-  buttonLabel: {
-    fontSize: 18,
-  },
-});
