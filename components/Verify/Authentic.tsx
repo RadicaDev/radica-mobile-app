@@ -1,5 +1,11 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import { Button, Card, Icon, Snackbar, Text } from "react-native-paper";
 import { useAppTheme } from "@/theme/paperTheme";
 import { router } from "expo-router";
@@ -10,6 +16,9 @@ import {
 } from "@/constants/RadixPropertyContract";
 import { useState } from "react";
 import * as Clipboard from "expo-clipboard";
+import StyledButton from "../Shared/StyledButton";
+import ConnectButton from "../Wallet/ConnectButton";
+import { AppKit } from "@reown/appkit-wagmi-react-native";
 
 interface AuthenticProps {
   id?: string;
@@ -160,43 +169,38 @@ export function Authentic({
       {/* Buttons */}
       <View style={styles.buttonContainer}>
         {!ownerAddress &&
-          (showConnect ? (
-            <Button
-              mode="contained"
-              onPress={() => router.navigate("/wallet")}
+          (showConnect && !userAddress ? (
+            <ConnectButton
+              variant="primary"
+              // onPress={() => router.navigate("/wallet")}
+              contentStyle={styles.buttonContent}
               style={styles.button}
-              labelStyle={styles.buttonLabel}
-              buttonColor={theme.colors.primary}
-              textColor={theme.colors.onPrimary}
             >
               Connect Wallet
-            </Button>
+            </ConnectButton>
           ) : (
             proof && (
-              <Button
-                mode="contained"
+              <StyledButton
+                variant="primary"
                 onPress={handleClaimProperty}
+                contentStyle={styles.buttonContent}
                 style={styles.button}
-                labelStyle={styles.buttonLabel}
-                buttonColor={theme.colors.primary}
-                textColor={theme.colors.onPrimary}
                 disabled={isPending}
               >
                 Claim Product
-              </Button>
+              </StyledButton>
             )
           ))}
-        <Button
-          mode="contained"
+        <StyledButton
+          variant="inverseSurface"
           onPress={() => router.back()}
+          contentStyle={styles.buttonContent}
           style={styles.button}
-          labelStyle={styles.buttonLabel}
-          buttonColor={theme.colors.secondary}
-          textColor={theme.colors.onSecondary}
         >
           Go Back
-        </Button>
+        </StyledButton>
       </View>
+      <AppKit />
     </LinearGradient>
   );
 }
@@ -271,10 +275,14 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    width: "90%",
-    paddingVertical: 10,
     borderRadius: 25,
+  },
+  buttonContent: {
+    width: Dimensions.get("window").width - 60,
+    height: 60,
     elevation: 4,
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonLabel: {
     fontSize: 18,

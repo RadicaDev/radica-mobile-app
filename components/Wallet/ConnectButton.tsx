@@ -7,9 +7,21 @@ import { ButtonProps } from "react-native-paper";
 import { useAccount } from "wagmi";
 import StyledButton from "../Shared/StyledButton";
 
-type ConnectButtonProps = Omit<ButtonProps, "onPress" | "disable">;
+type ConnectButtonProps = Omit<ButtonProps, "onPress" | "disable"> & {
+  variant?:
+    | "primary"
+    | "secondary"
+    | "tertiary"
+    | "error"
+    | "success"
+    | "warning"
+    | "info"
+    | "surface"
+    | "inverseSurface";
+};
 
 export default function ConnectButton({
+  variant,
   contentStyle,
   mode,
   labelStyle,
@@ -29,7 +41,7 @@ export default function ConnectButton({
 
   return (
     <StyledButton
-      variant="primary"
+      variant={variant ?? "primary"}
       contentStyle={contentStyle}
       mode={mode}
       onPress={handlePress}

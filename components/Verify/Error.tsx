@@ -1,8 +1,9 @@
 import { useAppTheme } from "@/theme/paperTheme";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import { Button, Icon, Text } from "react-native-paper";
+import StyledButton from "../Shared/StyledButton";
 
 interface ErrorProps {
   text: string;
@@ -30,16 +31,14 @@ export function Error({ text }: ErrorProps) {
             {text}
           </Text>
         </View>
-        <Button
-          mode="contained"
+        <StyledButton
+          variant="surface"
           onPress={() => router.back()}
+          contentStyle={styles.buttonContent}
           style={styles.button}
-          labelStyle={styles.buttonLabel}
-          buttonColor={theme.colors.secondary}
-          textColor={theme.colors.onSecondary}
         >
           Go Back
-        </Button>
+        </StyledButton>
       </View>
     </LinearGradient>
   );
@@ -67,12 +66,13 @@ const styles = StyleSheet.create({
   },
   button: {
     marginVertical: 48,
-    width: "90%",
-    paddingVertical: 10,
     borderRadius: 25,
-    elevation: 4,
   },
-  buttonLabel: {
-    fontSize: 18,
+  buttonContent: {
+    width: Dimensions.get("window").width - 60,
+    height: 60,
+    elevation: 4,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

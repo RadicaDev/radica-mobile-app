@@ -3,14 +3,16 @@ import { StyleSheet } from "react-native";
 import { useAppTheme } from "@/theme/paperTheme";
 
 type StyledButtonProps = ButtonProps & {
-  variant:
+  variant?:
     | "primary"
     | "secondary"
     | "tertiary"
     | "error"
     | "success"
     | "warning"
-    | "info";
+    | "info"
+    | "surface"
+    | "inverseSurface";
 };
 
 export default function StyledButton({
@@ -29,7 +31,9 @@ export default function StyledButton({
     | "onError"
     | "onSuccess"
     | "onWarning"
-    | "onInfo";
+    | "onInfo"
+    | "onSurface"
+    | "inverseOnSurface";
   switch (variant) {
     case "primary":
       labelStyleColor = "onPrimary";
@@ -52,8 +56,14 @@ export default function StyledButton({
     case "info":
       labelStyleColor = "onInfo";
       break;
+    case "surface":
+      labelStyleColor = "onSurface";
+      break;
+    case "inverseSurface":
+      labelStyleColor = "inverseOnSurface";
+      break;
     default:
-      labelStyleColor = "onPrimary";
+      labelStyleColor = "onSurface";
       break;
   }
 
@@ -68,7 +78,7 @@ export default function StyledButton({
         },
         labelStyle,
       ]}
-      buttonColor={buttonColor ?? theme.colors[variant]}
+      buttonColor={buttonColor ?? theme.colors[variant ?? "surface"]}
       {...rest}
     >
       {children}
