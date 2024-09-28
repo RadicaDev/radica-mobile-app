@@ -6,9 +6,11 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { BackgroundGradient } from "../Shared/BackgroundGradient";
-import { HelperText, TextInput } from "react-native-paper";
+import { HelperText, Portal, TextInput } from "react-native-paper";
 import StyledButton from "../Shared/StyledButton";
 import { isAddress } from "viem";
+import { useState } from "react";
+import { CameraModal } from "./CameraModal";
 
 type VerifyAddressFormProps = {
   address: string;
@@ -21,6 +23,8 @@ export function VerifyAddressForm({
   setAddress,
   handlePress,
 }: VerifyAddressFormProps) {
+  const [isScanning, setIsScanning] = useState<boolean>(false);
+
   const isError = (address: string) => {
     return address !== "" && !isAddress(address);
   };
@@ -29,6 +33,13 @@ export function VerifyAddressForm({
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <BackgroundGradient>
         <SafeAreaView style={styles.container}>
+          <Portal>
+            <CameraModal
+              isScanning={isScanning}
+              setIsScanning={setIsScanning}
+              setAddress={setAddress}
+            />
+          </Portal>
           <View style={styles.formContainer}>
             <TextInput
               mode="outlined"
@@ -37,7 +48,15 @@ export function VerifyAddressForm({
               value={address}
               onChangeText={(text) => setAddress(text)}
               error={isError(address)}
-              right={<TextInput.Icon icon="qrcode-scan" />}
+              right={
+                <TextInput.Icon
+                  icon="qrcode-scan"
+                  onPress={() => {
+                    Keyboard.dismiss();
+                    setIsScanning(true);
+                  }}
+                />
+              }
               multiline
             />
             <HelperText type="error" visible={isError(address)}>
@@ -66,5 +85,11 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     width: "90%",
+  },
+  modalContainer: {
+    padding: 20,
+    height: "70%",
+    width: "80%",
+    margin: "auto",
   },
 });
