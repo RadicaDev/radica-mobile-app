@@ -67,6 +67,7 @@ export function ProductDetailsCard({
                 { backgroundColor: theme.colors.surfaceDisabled },
               ]}
               title={item.description}
+              titleNumberOfLines={0}
               left={(props) =>
                 item.title !== "Description" && (
                   <TouchableOpacity
