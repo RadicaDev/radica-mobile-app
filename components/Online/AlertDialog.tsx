@@ -18,8 +18,8 @@ export function AlertDialog({
       <Dialog.Title>Beware!</Dialog.Title>
       <Dialog.Content>
         <Text variant="bodyMedium">
-          This is just a preliminary to verify the authenticity of the product
-          you are buying online.
+          This is just a preliminary step to verify the authenticity of the
+          product you are buying online.
         </Text>
       </Dialog.Content>
       <Dialog.Content>
