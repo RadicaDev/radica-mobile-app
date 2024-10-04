@@ -98,6 +98,16 @@ export default function WalletScreen() {
     },
   });
 
+  const productsWithTokenIds = (() => {
+    if (!products || !tokenIds) return undefined;
+
+    return products.map((product, index) => {
+      return { ...product, tokenId: tokenIds[index] } as Metadata & {
+        tokenId: bigint;
+      };
+    });
+  })();
+
   return (
     <BackgroundGradient>
       {!address ? (
@@ -106,7 +116,7 @@ export default function WalletScreen() {
         <Products
           refreshing={isRefetchingBalance}
           onRefresh={refetchBalance}
-          products={products}
+          products={productsWithTokenIds}
         />
       )}
     </BackgroundGradient>

@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
 
@@ -10,12 +11,19 @@ type Metadata = {
 };
 
 type ProductCardProps = {
-  product: Metadata;
+  product: Metadata & { tokenId: bigint };
 };
 
 export function ProductCard({ product }: ProductCardProps) {
+  const handlePress = () => {
+    router.push({
+      pathname: "../product/[...product]",
+      params: { ...product, tokenId: product.tokenId.toString() },
+    });
+  };
+
   return (
-    <TouchableOpacity style={styles.cardContainer}>
+    <TouchableOpacity style={styles.cardContainer} onPress={handlePress}>
       <Card>
         <Card.Content>
           <Paragraph style={styles.cardText}>ID: {product.id}</Paragraph>

@@ -20,13 +20,13 @@ type Metadata = {
 type ProductsProps = {
   refreshing: boolean;
   onRefresh: () => void;
-  products: (Metadata | undefined)[] | undefined;
+  products: ((Metadata & { tokenId: bigint }) | undefined)[] | undefined;
 };
 
 export function Products({ refreshing, onRefresh, products }: ProductsProps) {
   const productsCards = products?.map((product, key) => {
-    const productMeta = product as Metadata;
-    return <ProductCard product={productMeta} key={key} />;
+    if (product === undefined) return null;
+    return <ProductCard product={product} key={key} />;
   });
 
   return (

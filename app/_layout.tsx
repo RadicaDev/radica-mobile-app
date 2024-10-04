@@ -54,9 +54,21 @@ export default function RootLayout() {
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen
                 name="verify/[...tag]"
-                options={{ headerShown: false, presentation: "modal" }}
+                options={{
+                  headerShown: false,
+                  presentation: "modal",
+                }}
               />
               <Stack.Screen name="+not-found" />
+              <Stack.Screen
+                name="product/[...product]"
+                options={{
+                  headerTitle: "Product Details",
+                  headerTransparent: true,
+                  headerBackTitle: "Go back",
+                  headerBlurEffect: "regular",
+                }}
+              />
             </Stack>
           </PaperProvider>
           <AppKit />

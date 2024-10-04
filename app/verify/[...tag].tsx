@@ -93,6 +93,7 @@ export default function VerifyScreen() {
         name={metadata?.name}
         description={metadata?.description}
         image={metadata?.image}
+        external_url={metadata?.external_url}
         tokenId={tokenId as bigint}
         proof={proof}
       />

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import { Button, Card, Icon, Snackbar, Text } from "react-native-paper";
+import { Card, Icon, Snackbar, Text } from "react-native-paper";
 import { useAppTheme } from "@/theme/paperTheme";
 import { router } from "expo-router";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
@@ -25,6 +25,7 @@ interface AuthenticProps {
   name?: string;
   description?: string;
   image?: string;
+  external_url?: string;
   tokenId: bigint;
   proof?: `0x${string}`;
 }
@@ -34,6 +35,7 @@ export function Authentic({
   name,
   description,
   image,
+  external_url,
   tokenId,
   proof,
 }: AuthenticProps) {
@@ -102,24 +104,44 @@ export function Authentic({
           </View>
 
           {/* Product Card */}
-          <Card style={styles.productCard}>
-            {image && (
-              <Card.Cover source={{ uri: image }} style={styles.productImage} />
-            )}
-            <Card.Content>
-              {name && <Text style={styles.productName}>{name}</Text>}
-              {id && (
-                <Text
-                  style={[styles.productId, { color: theme.colors.primary }]}
-                >
-                  ID: {id}
-                </Text>
+          <TouchableOpacity
+            style={styles.productCardContainer}
+            onPress={() => {
+              router.replace({
+                pathname: "../product/[...product].tsx",
+                params: {
+                  id,
+                  name,
+                  description,
+                  external_url,
+                  image,
+                  tokenId: [tokenId.toString()],
+                },
+              });
+            }}
+          >
+            <Card style={styles.productCard}>
+              {image && (
+                <Card.Cover
+                  source={{ uri: image }}
+                  style={styles.productImage}
+                />
               )}
-              {description && (
-                <Text style={styles.productDescription}>{description}</Text>
-              )}
-            </Card.Content>
-          </Card>
+              <Card.Content>
+                {name && <Text style={styles.productName}>{name}</Text>}
+                {id && (
+                  <Text
+                    style={[styles.productId, { color: theme.colors.primary }]}
+                  >
+                    ID: {id}
+                  </Text>
+                )}
+                {description && (
+                  <Text style={styles.productDescription}>{description}</Text>
+                )}
+              </Card.Content>
+            </Card>
+          </TouchableOpacity>
 
           {/* Owner */}
           {ownerAddress && (
@@ -229,8 +251,10 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
   },
-  productCard: {
+  productCardContainer: {
     width: "90%",
+  },
+  productCard: {
     borderRadius: 15,
     elevation: 4, // Adds a shadow for Android
     shadowColor: "#000",
