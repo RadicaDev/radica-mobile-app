@@ -1,14 +1,7 @@
 import { useAppTheme } from "@/theme/paperTheme";
 import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import {
-  Card,
-  Divider,
-  List,
-  Paragraph,
-  Snackbar,
-  Title,
-} from "react-native-paper";
+import { Card, Divider, List, Paragraph, Title } from "react-native-paper";
 import * as Clipboard from "expo-clipboard";
 
 type Metadata = {
@@ -62,8 +55,7 @@ export function ProductDetailsCard({
         <View key={index}>
           <List.Accordion
             style={{
-              backgroundColor: theme.colors.surfaceVariant,
-              // borderRadius: 10,
+              backgroundColor: theme.colors.elevation.level1,
             }}
             title={item.title}
             left={(props) => <List.Icon {...props} icon={item.icon} />}
@@ -99,7 +91,7 @@ export function ProductDetailsCard({
   });
 
   return (
-    <Card mode="contained" style={styles.card}>
+    <Card mode="elevated" style={styles.card}>
       {image && <Card.Cover source={{ uri: image }} style={styles.image} />}
       <Card.Content style={styles.cardContent}>
         <View>
