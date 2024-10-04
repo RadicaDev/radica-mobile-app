@@ -2,7 +2,7 @@ import { useAppTheme } from "@/theme/paperTheme";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { Dimensions, StyleSheet, View } from "react-native";
-import { Button, Icon, Text } from "react-native-paper";
+import { Icon, Text } from "react-native-paper";
 import StyledButton from "../Shared/StyledButton";
 
 interface ErrorProps {

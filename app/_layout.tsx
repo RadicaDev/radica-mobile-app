@@ -59,7 +59,6 @@ export default function RootLayout() {
                   presentation: "modal",
                 }}
               />
-              <Stack.Screen name="+not-found" />
               <Stack.Screen
                 name="product/[...product]"
                 options={{
@@ -69,6 +68,7 @@ export default function RootLayout() {
                   headerBlurEffect: "regular",
                 }}
               />
+              <Stack.Screen name="+not-found" />
             </Stack>
           </PaperProvider>
           <AppKit />
