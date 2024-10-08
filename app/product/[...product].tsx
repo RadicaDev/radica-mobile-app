@@ -13,14 +13,7 @@ import {
 import { ProductDetailsCard } from "@/components/Product/ProductDetailsCard";
 import { Snackbar } from "react-native-paper";
 import { useState } from "react";
-
-type Metadata = {
-  id: string;
-  description?: string;
-  external_url?: string;
-  image?: string;
-  name?: string;
-};
+import { Metadata } from "@/types/Metadata";
 
 export default function ProductScreen() {
   const product = useLocalSearchParams();

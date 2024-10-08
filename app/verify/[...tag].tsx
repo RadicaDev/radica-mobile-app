@@ -2,16 +2,9 @@ import { Authentic } from "@/components/Verify/Authentic";
 import { Error } from "@/components/Verify/Error";
 import { Loading } from "@/components/Verify/Loading";
 import { abi, address } from "@/constants/RadicaTagContract";
+import { Metadata } from "@/types/Metadata";
 import { useLocalSearchParams } from "expo-router";
 import { useReadContract } from "wagmi";
-
-type Metadata = {
-  id: string;
-  description?: string;
-  external_url?: string;
-  image?: string;
-  name?: string;
-};
 
 export default function VerifyScreen() {
   const {

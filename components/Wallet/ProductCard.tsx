@@ -1,14 +1,7 @@
+import { Metadata } from "@/types/Metadata";
 import { router } from "expo-router";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
-
-type Metadata = {
-  id: string;
-  description?: string;
-  external_url?: string;
-  image?: string;
-  name?: string;
-};
 
 type ProductCardProps = {
   product: Metadata & { tokenId: bigint };

@@ -3,14 +3,7 @@ import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Card, Divider, List, Paragraph, Title } from "react-native-paper";
 import * as Clipboard from "expo-clipboard";
-
-type Metadata = {
-  id: string;
-  description?: string;
-  external_url?: string;
-  image?: string;
-  name?: string;
-};
+import { Metadata } from "@/types/Metadata";
 
 type ProductDetailsCardProps = Metadata & {
   tokenId: bigint;

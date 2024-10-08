@@ -10,14 +10,7 @@ import {
   abi as abiProperty,
   address as addressProperty,
 } from "@/constants/RadicaPropertyContract";
-
-type Metadata = {
-  id: string;
-  description?: string;
-  external_url?: string;
-  image?: string;
-  name?: string;
-};
+import { Metadata } from "@/types/Metadata";
 
 export default function WalletScreen() {
   const { address } = useAccount();

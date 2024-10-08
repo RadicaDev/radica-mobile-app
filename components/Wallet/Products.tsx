@@ -8,14 +8,7 @@ import {
 import ConnectButton from "./ConnectButton";
 import { Text } from "react-native-paper";
 import { ProductCard } from "./ProductCard";
-
-type Metadata = {
-  id: string;
-  description?: string;
-  external_url?: string;
-  image?: string;
-  name?: string;
-};
+import { Metadata } from "@/types/Metadata";
 
 type ProductsProps = {
   refreshing: boolean;
