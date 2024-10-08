@@ -5,11 +5,11 @@ import { Products } from "@/components/Wallet/Products";
 import {
   abi as abiTag,
   address as addressTag,
-} from "@/constants/RadixContract";
+} from "@/constants/RadicaTagContract";
 import {
   abi as abiProperty,
   address as addressProperty,
-} from "@/constants/RadixPropertyContract";
+} from "@/constants/RadicaPropertyContract";
 
 type Metadata = {
   id: string;

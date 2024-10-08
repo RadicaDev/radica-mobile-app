@@ -430,7 +430,7 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "radixPropertyAddr",
+    name: "radicaPropertyAddr",
     outputs: [
       {
         internalType: "address",
@@ -521,11 +521,11 @@ export const abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_radixPropertyAddr",
+        name: "_radicaPropertyAddr",
         type: "address",
       },
     ],
-    name: "setRadixPropertyAddr",
+    name: "setRadicaPropertyAddr",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

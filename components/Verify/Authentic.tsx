@@ -13,7 +13,7 @@ import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import {
   abi,
   address as contractAddress,
-} from "@/constants/RadixPropertyContract";
+} from "@/constants/RadicaPropertyContract";
 import { useState } from "react";
 import * as Clipboard from "expo-clipboard";
 import StyledButton from "../Shared/StyledButton";

@@ -1,7 +1,7 @@
 import { Authentic } from "@/components/Verify/Authentic";
 import { Error } from "@/components/Verify/Error";
 import { Loading } from "@/components/Verify/Loading";
-import { abi, address } from "@/constants/RadixContract";
+import { abi, address } from "@/constants/RadicaTagContract";
 import { useLocalSearchParams } from "expo-router";
 import { useReadContract } from "wagmi";
 

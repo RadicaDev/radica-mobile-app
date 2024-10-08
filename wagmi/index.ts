@@ -6,8 +6,8 @@ import { appSettings } from "../app-settings";
 const projectId = "dace2ce5fa77568df22525a38edf07e8";
 
 const metadata = {
-  name: "Radix Mobile App Demo",
-  description: "Radix Mobile App Demo",
+  name: "Radica Mobile App Demo",
+  description: "Radica Mobile App Demo",
   url: "https://walletconnect.com",
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
   // redirect: {

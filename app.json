@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Radix",
-    "slug": "Radix",
+    "name": "Radica",
+    "slug": "Radica",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -23,7 +23,7 @@
           "uniswap"
         ]
       },
-      "bundleIdentifier": "com.radix.mobileappdemo"
+      "bundleIdentifier": "com.radica.mobileappdemo"
     },
     "android": {
       "adaptiveIcon": {

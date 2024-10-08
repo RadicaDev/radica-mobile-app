@@ -8,7 +8,7 @@ export const abi = [
     inputs: [
       {
         internalType: "address",
-        name: "radixTagAddr",
+        name: "radicaTagAddr",
         type: "address",
       },
     ],

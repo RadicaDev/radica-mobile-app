@@ -3,13 +3,13 @@ import { BackgroundGradient } from "@/components/Shared/BackgroundGradient";
 import { ScrollView, SafeAreaView, StyleSheet } from "react-native";
 import { useReadContract } from "wagmi";
 import {
-  abi as abiRadix,
-  address as addressRadix,
-} from "@/constants/RadixContract";
+  abi as abiRadica,
+  address as addressRadica,
+} from "@/constants/RadicaTagContract";
 import {
   abi as abiProperty,
   address as addressProperty,
-} from "@/constants/RadixPropertyContract";
+} from "@/constants/RadicaPropertyContract";
 import { ProductDetailsCard } from "@/components/Product/ProductDetailsCard";
 import { Snackbar } from "react-native-paper";
 import { useState } from "react";
@@ -31,8 +31,8 @@ export default function ProductScreen() {
   const [showSnakbar, setShowSnackbar] = useState(false);
 
   const { data: tagAddress } = useReadContract({
-    abi: abiRadix,
-    address: addressRadix,
+    abi: abiRadica,
+    address: addressRadica,
     functionName: "ownerOf",
     args: [tokenId],
   });
