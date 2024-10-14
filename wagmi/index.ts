@@ -2,6 +2,7 @@ import { Web3ModalOptions } from "@web3modal/wagmi-react-native";
 import { defaultWagmiConfig } from "@reown/appkit-wagmi-react-native";
 import { hardhat } from "viem/chains";
 import { appSettings } from "../app-settings";
+import * as Clipboard from "expo-clipboard";
 
 const projectId = "dace2ce5fa77568df22525a38edf07e8";
 
@@ -32,6 +33,11 @@ const modalOptions: Web3ModalOptions = {
   wagmiConfig,
   defaultChain: hardhat,
   enableAnalytics: false,
+  clipboardClient: {
+    setString: async (value: string) => {
+      await Clipboard.setStringAsync(value);
+    },
+  },
 };
 
 export default modalOptions;

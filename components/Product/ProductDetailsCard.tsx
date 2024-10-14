@@ -4,12 +4,15 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Card, Divider, List, Paragraph, Title } from "react-native-paper";
 import * as Clipboard from "expo-clipboard";
 import { Metadata } from "@/types/Metadata";
+import { useAccount } from "wagmi";
+import StyledButton from "../Shared/StyledButton";
 
 type ProductDetailsCardProps = Metadata & {
   tokenId: bigint;
   tagAddress?: `0x${string}`;
   ownerAddress?: `0x${string}`;
   setShowSnackbar: (value: boolean) => void;
+  setShowDialog: (value: boolean) => void;
 };
 
 export function ProductDetailsCard({
@@ -22,12 +25,15 @@ export function ProductDetailsCard({
   ownerAddress,
   tokenId,
   setShowSnackbar,
+  setShowDialog,
 }: ProductDetailsCardProps) {
   const [expandedId, setExpandedId] = useState<string | number | undefined>(
     undefined,
   );
 
   const theme = useAppTheme();
+
+  const { address: userAddress } = useAccount();
 
   const accordionItemsContent = [
     { title: "Description", description: description, icon: "text-box" },
@@ -105,6 +111,13 @@ export function ProductDetailsCard({
           </List.AccordionGroup>
         </View>
       </Card.Content>
+      {userAddress === ownerAddress && (
+        <Card.Actions>
+          <StyledButton variant="primary" onPress={() => setShowDialog(true)}>
+            Transfer
+          </StyledButton>
+        </Card.Actions>
+      )}
     </Card>
   );
 }

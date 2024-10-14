@@ -6,17 +6,11 @@ import {
   View,
 } from "react-native";
 import { BackgroundGradient } from "../Shared/BackgroundGradient";
-import {
-  Dialog,
-  HelperText,
-  Portal,
-  Text,
-  TextInput,
-} from "react-native-paper";
+import { HelperText, Portal, TextInput } from "react-native-paper";
 import StyledButton from "../Shared/StyledButton";
 import { isAddress } from "viem";
 import { useEffect, useState } from "react";
-import { CameraModal } from "./CameraModal";
+import { CameraModal } from "../Shared/CameraModal";
 import { AlertDialog } from "./AlertDialog";
 
 type VerifyAddressFormProps = {

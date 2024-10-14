@@ -56,7 +56,7 @@ export function Authentic({
   const { writeContract, isPending } = useWriteContract({
     mutation: {
       onError: () => {
-        alert(`An Error Occurred`);
+        alert(`An error occurred`);
       },
       onSuccess: () => {
         alert(`Property claimed successfully!`);
@@ -194,7 +194,6 @@ export function Authentic({
           (showConnect && !userAddress ? (
             <ConnectButton
               variant="primary"
-              // onPress={() => router.navigate("/wallet")}
               contentStyle={styles.buttonContent}
               style={styles.button}
             >

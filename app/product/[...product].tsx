@@ -11,9 +11,11 @@ import {
   address as addressProperty,
 } from "@/constants/RadicaPropertyContract";
 import { ProductDetailsCard } from "@/components/Product/ProductDetailsCard";
-import { Snackbar } from "react-native-paper";
-import { useState } from "react";
+import { Portal, Snackbar } from "react-native-paper";
+import { useRef, useState } from "react";
 import { Metadata } from "@/types/Metadata";
+import { TransferModal } from "@/components/Product/TransferModal";
+import { CameraModal } from "@/components/Shared/CameraModal";
 
 export default function ProductScreen() {
   const product = useLocalSearchParams();
@@ -21,6 +23,12 @@ export default function ProductScreen() {
     product as unknown as Metadata & { id: string };
   const tokenId = BigInt(product.tokenId as string);
 
+  const [showDialog, setShowDialog] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const recipientAddress = useRef<string>("");
+  const setRecipientAddress = (value: string) => {
+    recipientAddress.current = value;
+  };
   const [showSnakbar, setShowSnackbar] = useState(false);
 
   const { data: tagAddress } = useReadContract({
@@ -40,6 +48,23 @@ export default function ProductScreen() {
   return (
     <BackgroundGradient>
       <SafeAreaView style={styles.container}>
+        <Portal>
+          <Portal>
+            <CameraModal
+              isScanning={isScanning}
+              setIsScanning={setIsScanning}
+              setAddress={setRecipientAddress}
+            />
+          </Portal>
+          <TransferModal
+            recipientAddress={recipientAddress.current}
+            setRecipientAddress={setRecipientAddress}
+            isDialogVisible={showDialog}
+            setIsDialogVisible={setShowDialog}
+            setIsScanning={setIsScanning}
+            tokenId={tokenId}
+          />
+        </Portal>
         <ScrollView
           bounces
           style={styles.scrollView}
@@ -55,6 +80,7 @@ export default function ProductScreen() {
             ownerAddress={ownerAddress}
             tokenId={tokenId}
             setShowSnackbar={setShowSnackbar}
+            setShowDialog={setShowDialog}
           />
         </ScrollView>
         <Snackbar
