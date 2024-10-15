@@ -78,6 +78,10 @@ export function TransferModal({
               placeholder="0x..."
               value={recipientAddressCopy}
               onChangeText={(text) => {
+                if (text.includes("\n")) {
+                  Keyboard.dismiss();
+                  return;
+                }
                 setRecipientAddressCopy(text);
                 setRecipientAddress(text);
               }}

@@ -64,7 +64,13 @@ export function VerifyAddressForm({
               label="Address"
               placeholder="0x..."
               value={address}
-              onChangeText={(text) => setAddress(text)}
+              onChangeText={(text) => {
+                if (text.includes("\n")) {
+                  Keyboard.dismiss();
+                  return;
+                }
+                setAddress(text);
+              }}
               error={isError(address)}
               right={
                 <TextInput.Icon
