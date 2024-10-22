@@ -75,7 +75,7 @@ async function scanTag(
 
       if (isVerified) {
         await nfcManager.setAlertMessageIOS("Signature verified!");
-        recoveredAddress = privateKeyToAddress(keccak256(uidHex));
+        recoveredAddress = privateKeyToAddress(keccak256(sigHex));
         resolve({ recoveredAddress, proof: proofHex });
       } else {
         await nfcManager.invalidateSessionWithErrorIOS("Invalid Signature");
