@@ -34,13 +34,19 @@ async function scanTag(
       // read tag memory
       for (let i = 0; i < p; i++) {
         const offset = blockNumber + i * (packetSize / blockSize);
-        const tmpRes =
-          offset * blockSize + packetSize > blockNumber * blockSize + length
-            ? (await nfcManager.nfcAHandler.transceive([0x30, offset])).slice(
-                0,
-                length % packetSize,
-              )
-            : await nfcManager.nfcAHandler.transceive([0x30, offset]);
+        let tmpRes: number[] = [];
+        try {
+          tmpRes =
+            offset * blockSize + packetSize > blockNumber * blockSize + length
+              ? (await nfcManager.nfcAHandler.transceive([0x30, offset])).slice(
+                  0,
+                  length % packetSize,
+                )
+              : await nfcManager.nfcAHandler.transceive([0x30, offset]);
+        } catch (e) {
+          await nfcManager.invalidateSessionWithErrorIOS("Error reading tag");
+          reject("Invalid tag");
+        }
         res = [...res, ...tmpRes];
       }
 
