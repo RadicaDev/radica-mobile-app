@@ -3,25 +3,31 @@ import { BackgroundGradient } from "@/components/Shared/BackgroundGradient";
 import { ScrollView, SafeAreaView, StyleSheet } from "react-native";
 import { useReadContract } from "wagmi";
 import {
-  abi as abiRadica,
-  address as addressRadica,
-} from "@/constants/RadicaTagContract";
-import {
   abi as abiProperty,
   address as addressProperty,
 } from "@/constants/RadicaPropertyContract";
 import { ProductDetailsCard } from "@/components/Product/ProductDetailsCard";
 import { Portal, Snackbar } from "react-native-paper";
 import { useRef, useState } from "react";
-import { Metadata } from "@/types/Metadata";
+import { Metadata, TracebilityMetadata } from "@/types/Metadata";
 import { TransferModal } from "@/components/Product/TransferModal";
 import { CameraModal } from "@/components/Shared/CameraModal";
 
 export default function ProductScreen() {
   const product = useLocalSearchParams();
-  const { id, name, description, image, external_url } =
-    product as unknown as Metadata & { id: string };
-  const tokenId = BigInt(product.tokenId as string);
+  const {
+    serialNumber,
+    name,
+    description,
+    image,
+    manufacturer,
+    externalUrl,
+    batchId,
+    supplierChainHash,
+    tagAddress,
+  } = product as unknown as Metadata &
+    TracebilityMetadata & { tagAddress: `0x${string}` };
+  const certId = BigInt(product.certId as `0x${string}`);
 
   const [showDialog, setShowDialog] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -31,18 +37,11 @@ export default function ProductScreen() {
   };
   const [showSnakbar, setShowSnackbar] = useState(false);
 
-  const { data: tagAddress } = useReadContract({
-    abi: abiRadica,
-    address: addressRadica,
-    functionName: "ownerOf",
-    args: [tokenId],
-  });
-
   const { data: ownerAddress } = useReadContract({
     abi: abiProperty,
     address: addressProperty,
     functionName: "ownerOf",
-    args: [tokenId],
+    args: [certId],
   });
 
   return (
@@ -62,7 +61,7 @@ export default function ProductScreen() {
             isDialogVisible={showDialog}
             setIsDialogVisible={setShowDialog}
             setIsScanning={setIsScanning}
-            tokenId={tokenId}
+            tokenId={certId}
           />
         </Portal>
         <ScrollView
@@ -71,14 +70,17 @@ export default function ProductScreen() {
           contentContainerStyle={styles.scrollViewContent}
         >
           <ProductDetailsCard
-            id={id}
+            serialNumber={serialNumber}
             name={name}
             description={description}
             image={image}
-            external_url={external_url}
+            manufacturer={manufacturer}
+            externalUrl={externalUrl}
+            batchId={batchId}
+            supplierChainHash={supplierChainHash}
             tagAddress={tagAddress}
             ownerAddress={ownerAddress}
-            tokenId={tokenId}
+            certId={certId}
             setShowSnackbar={setShowSnackbar}
             setShowDialog={setShowDialog}
           />

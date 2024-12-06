@@ -19,26 +19,25 @@ import * as Clipboard from "expo-clipboard";
 import StyledButton from "../Shared/StyledButton";
 import ConnectButton from "../Wallet/ConnectButton";
 import { AppKit } from "@reown/appkit-wagmi-react-native";
+import { Metadata, TracebilityMetadata } from "@/types/Metadata";
 
 interface AuthenticProps {
-  id?: string;
-  name?: string;
-  description?: string;
-  image?: string;
-  external_url?: string;
-  tokenId: bigint;
+  certId: bigint;
+  metadata: Metadata;
+  traceabilityMetadata: TracebilityMetadata;
   proof?: `0x${string}`;
+  tagAddress: `0x${string}`;
 }
 
 export function Authentic({
-  id,
-  name,
-  description,
-  image,
-  external_url,
-  tokenId,
+  certId,
+  metadata,
+  traceabilityMetadata,
   proof,
+  tagAddress,
 }: AuthenticProps) {
+  const { serialNumber, name, description, image } = metadata;
+
   const theme = useAppTheme();
 
   const [showConnect, setShowConnect] = useState(false);
@@ -50,7 +49,7 @@ export function Authentic({
     abi,
     address: contractAddress,
     functionName: "ownerOf",
-    args: [tokenId],
+    args: [certId],
   });
 
   const { writeContract, isPending } = useWriteContract({
@@ -75,7 +74,7 @@ export function Authentic({
         abi,
         address: contractAddress,
         functionName: "claimProperty",
-        args: [tokenId, proof, `Property of ${tokenId.toString()}`],
+        args: [certId, proof],
       });
     }
   };
@@ -110,12 +109,10 @@ export function Authentic({
               router.replace({
                 pathname: "../product/[...product].tsx",
                 params: {
-                  id,
-                  name,
-                  description,
-                  external_url,
-                  image,
-                  tokenId: [tokenId.toString()],
+                  certId: `0x${certId.toString(16)}`,
+                  ...metadata,
+                  ...traceabilityMetadata,
+                  tagAddress,
                 },
               });
             }}
@@ -123,17 +120,17 @@ export function Authentic({
             <Card style={styles.productCard}>
               {image && (
                 <Card.Cover
-                  source={{ uri: image }}
+                  source={{ uri: metadata.image }}
                   style={styles.productImage}
                 />
               )}
               <Card.Content>
                 {name && <Text style={styles.productName}>{name}</Text>}
-                {id && (
+                {serialNumber && (
                   <Text
                     style={[styles.productId, { color: theme.colors.primary }]}
                   >
-                    ID: {id}
+                    {serialNumber}
                   </Text>
                 )}
                 {description && (

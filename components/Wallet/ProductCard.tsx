@@ -1,17 +1,21 @@
-import { Metadata } from "@/types/Metadata";
+import { Certificate, Metadata } from "@/types/Metadata";
 import { router } from "expo-router";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Card, Paragraph, Title } from "react-native-paper";
 
 type ProductCardProps = {
-  product: Metadata & { tokenId: bigint };
+  cert: Certificate;
 };
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ cert }: ProductCardProps) {
   const handlePress = () => {
     router.push({
       pathname: "../product/[...product]",
-      params: { ...product, tokenId: product.tokenId.toString() },
+      params: {
+        ...cert.metadata,
+        ...cert.traceabilityMetadata,
+        certId: `0x${cert.id.toString(16)}`,
+      },
     });
   };
 
@@ -19,8 +23,10 @@ export function ProductCard({ product }: ProductCardProps) {
     <TouchableOpacity style={styles.cardContainer} onPress={handlePress}>
       <Card>
         <Card.Content>
-          <Paragraph style={styles.cardText}>ID: {product.id}</Paragraph>
-          <Title style={styles.cardText}>{product.name}</Title>
+          <Paragraph style={styles.cardText}>
+            ID: {cert.metadata.serialNumber}
+          </Paragraph>
+          <Title style={styles.cardText}>{cert.metadata.name}</Title>
         </Card.Content>
       </Card>
     </TouchableOpacity>

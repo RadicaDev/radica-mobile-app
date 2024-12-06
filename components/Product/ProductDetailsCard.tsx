@@ -3,27 +3,31 @@ import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Card, Divider, List, Paragraph, Title } from "react-native-paper";
 import * as Clipboard from "expo-clipboard";
-import { Metadata } from "@/types/Metadata";
+import { Metadata, TracebilityMetadata } from "@/types/Metadata";
 import { useAccount } from "wagmi";
 import StyledButton from "../Shared/StyledButton";
 
-type ProductDetailsCardProps = Metadata & {
-  tokenId: bigint;
-  tagAddress?: `0x${string}`;
-  ownerAddress?: `0x${string}`;
-  setShowSnackbar: (value: boolean) => void;
-  setShowDialog: (value: boolean) => void;
-};
+type ProductDetailsCardProps = Metadata &
+  TracebilityMetadata & {
+    certId: bigint;
+    tagAddress?: `0x${string}`;
+    ownerAddress?: `0x${string}`;
+    setShowSnackbar: (value: boolean) => void;
+    setShowDialog: (value: boolean) => void;
+  };
 
 export function ProductDetailsCard({
-  id,
+  serialNumber,
   name,
   description,
   image,
-  external_url,
+  manufacturer,
+  externalUrl,
+  batchId,
+  supplierChainHash,
   tagAddress,
   ownerAddress,
-  tokenId,
+  certId,
   setShowSnackbar,
   setShowDialog,
 }: ProductDetailsCardProps) {
@@ -35,16 +39,33 @@ export function ProductDetailsCard({
 
   const { address: userAddress } = useAccount();
 
+  const issuerFP =
+    (certId >> 160n).toString(16).toUpperCase().match(/.{2}/g)?.join(":") || "";
+
   const accordionItemsContent = [
+    { title: "Serial Number", description: serialNumber, icon: "tag" },
+    { title: "Name", description: name, icon: "text-box" },
     { title: "Description", description: description, icon: "text-box" },
     { title: "Image URL", description: image, icon: "image" },
-    { title: "External URL", description: external_url, icon: "open-in-new" },
+    { title: "Manufacturer", description: manufacturer, icon: "cogs" },
+    { title: "External URL", description: externalUrl, icon: "open-in-new" },
     { title: "Tag Address", description: tagAddress, icon: "tag" },
-    { title: "Owner Address", description: ownerAddress, icon: "account" },
+    { title: "Batch Id", description: batchId, icon: "database-cog" },
+    {
+      title: "Supplier Chain Hash",
+      description: supplierChainHash,
+      icon: "link-lock",
+    },
     {
       title: "Token ID",
-      description: tokenId.toString(),
+      description: ownerAddress ? `0x${certId.toString(16)}` : undefined,
       icon: "currency-eth",
+    },
+    { title: "Owner Address", description: ownerAddress, icon: "account" },
+    {
+      title: "Issuer Fingerprint",
+      description: issuerFP,
+      icon: "fingerprint",
     },
   ];
 
@@ -95,8 +116,17 @@ export function ProductDetailsCard({
       {image && <Card.Cover source={{ uri: image }} style={styles.image} />}
       <Card.Content style={styles.cardContent}>
         <View>
-          <Title style={styles.title}>{name ?? "Unknown Product"}</Title>
-          <Paragraph style={styles.id}>Product ID: {id}</Paragraph>
+          <Title style={styles.title}>Certificate ID</Title>
+          <TouchableOpacity
+            onPress={async () => {
+              await Clipboard.setStringAsync(`${certId.toString(16)}`);
+              setShowSnackbar(true);
+            }}
+          >
+            <Paragraph
+              style={styles.id}
+            >{`0x${certId.toString(16)}`}</Paragraph>
+          </TouchableOpacity>
         </View>
         <View style={{ width: "100%" }}>
           <List.AccordionGroup
@@ -111,7 +141,7 @@ export function ProductDetailsCard({
           </List.AccordionGroup>
         </View>
       </Card.Content>
-      {userAddress === ownerAddress && (
+      {userAddress && ownerAddress && userAddress === ownerAddress && (
         <Card.Actions>
           <StyledButton variant="primary" onPress={() => setShowDialog(true)}>
             Transfer
