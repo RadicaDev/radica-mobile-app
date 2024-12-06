@@ -1,50 +1,74 @@
-# Welcome to your Expo app 👋
+# Radica Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Radica mobile app allows you to verify product certified with Radica technology by scanning NFC tags.
 
-## Get started
 
-1. Install dependencies
+## Installation
 
-   ```bash
-   npm install
-   ```
+### Requirements
 
-2. Start the app
+- Node.js
+- Apple Developer Account (for iOS)
 
-   ```bash
-    npx expo start
-   ```
+> **Note:** You need to have an Apple Developer Account to install the app on your iPhone. This is required since the app uses the NFC api which is not available on the simulator. You must also configure your account in Xcode. You can follow the expo guide [here](https://docs.expo.dev/get-started/set-up-your-environment/?platform=ios&device=physical&mode=development-build&buildEnv=local).
 
-In the output, you'll find options to open the app in a
+### Run Locally
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Clone the project
 
 ```bash
-npm run reset-project
+git clone https://github.com/RadicaDev/radica-mobile-app.git
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Go to the project directory
 
-## Learn more
+```bash
+  cd radica-mobile-app
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+Install dependencies
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm install
+```
+    
+To run the project locally first setup the blockchain environment by following the instructions in the [radica-contracts](https://github.com/RadicaDev/radica-contracts.git) repository.
 
-## Join the community
+Be sure to set the right parameters in `app-settings.ts` file.
 
-Join our community of developers creating universal apps.
+#### Development build
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+To install a development build on your iPhone, run
+
+```bash
+  npx expo run:ios --device
+```
+
+Then you can run the following command to start the development server future times
+
+```bash
+  npx expo start
+```
+
+#### Production build
+
+To install a production build on your iPhone, run
+
+```bash
+  npx expo build:ios --device --configuration Release
+```
+
+You won't need to run a server with the production build.
+
+## Usage/Examples
+
+The app has three main tabs:
+
+- **Verify**: Allows you to scan a Radica NFC tag and verify its authenticity.
+- **Wallet**: Allows you to see your wallet balance and owned product.
+- **Online**: Allows you to verify a product by entering its address.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
