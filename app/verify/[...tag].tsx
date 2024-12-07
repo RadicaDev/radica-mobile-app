@@ -2,9 +2,10 @@ import { Authentic } from "@/components/Verify/Authentic";
 import { Error } from "@/components/Verify/Error";
 import { Loading } from "@/components/Verify/Loading";
 import { abi, address } from "@/constants/RadicaTagContract";
+import { ChainIdType } from "@/types/ChainId";
 import { Certificate, Metadata, TracebilityMetadata } from "@/types/Metadata";
 import { useLocalSearchParams } from "expo-router";
-import { useReadContract } from "wagmi";
+import { useChainId, useReadContract } from "wagmi";
 
 export default function VerifyScreen() {
   const {
@@ -13,14 +14,17 @@ export default function VerifyScreen() {
   }: { recoveredAddress: `0x${string}`; proof?: `0x${string}` } =
     useLocalSearchParams();
 
+  const chainId = useChainId() as ChainIdType;
+
   const {
     data: cert,
     isLoading: isLoadingCert,
     isError: isErrorCert,
   } = useReadContract({
     abi,
-    address,
+    address: address(chainId),
     functionName: "tagAddrToCert",
+    chainId,
     args: [recoveredAddress],
     query: {
       select: (data) => {

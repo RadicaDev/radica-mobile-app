@@ -9,7 +9,12 @@ import {
 import { Card, Icon, Snackbar, Text } from "react-native-paper";
 import { useAppTheme } from "@/theme/paperTheme";
 import { router } from "expo-router";
-import { useAccount, useReadContract, useWriteContract } from "wagmi";
+import {
+  useAccount,
+  useChainId,
+  useReadContract,
+  useWriteContract,
+} from "wagmi";
 import {
   abi,
   address as contractAddress,
@@ -20,6 +25,7 @@ import StyledButton from "../Shared/StyledButton";
 import ConnectButton from "../Wallet/ConnectButton";
 import { AppKit } from "@reown/appkit-wagmi-react-native";
 import { Metadata, TracebilityMetadata } from "@/types/Metadata";
+import { ChainIdType } from "@/types/ChainId";
 
 interface AuthenticProps {
   certId: bigint;
@@ -45,9 +51,12 @@ export function Authentic({
 
   const { address: userAddress } = useAccount();
 
+  const chainId = useChainId() as ChainIdType;
+
   const { data: ownerAddress } = useReadContract({
     abi,
-    address: contractAddress,
+    address: contractAddress(chainId),
+    chainId,
     functionName: "ownerOf",
     args: [certId],
   });
@@ -72,7 +81,8 @@ export function Authentic({
     if (proof) {
       writeContract({
         abi,
-        address: contractAddress,
+        address: contractAddress(chainId),
+        chainId,
         functionName: "claimProperty",
         args: [certId, proof],
       });

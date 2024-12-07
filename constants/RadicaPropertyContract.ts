@@ -1,7 +1,8 @@
 import { appSettings } from "@/app-settings";
+import { ChainIdType } from "@/types/ChainId";
 
-export const address = appSettings[31337]
-  .propertyContractAddress as `0x${string}`;
+export const address = (chainId: ChainIdType) =>
+  appSettings[chainId].propertyContractAddress as `0x${string}`;
 
 export const abi = [
   {

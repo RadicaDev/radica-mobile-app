@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from "expo-router";
 import { BackgroundGradient } from "@/components/Shared/BackgroundGradient";
 import { ScrollView, SafeAreaView, StyleSheet } from "react-native";
-import { useReadContract } from "wagmi";
+import { useChainId, useReadContract } from "wagmi";
 import {
   abi as abiProperty,
   address as addressProperty,
@@ -12,6 +12,7 @@ import { useRef, useState } from "react";
 import { Metadata, TracebilityMetadata } from "@/types/Metadata";
 import { TransferModal } from "@/components/Product/TransferModal";
 import { CameraModal } from "@/components/Shared/CameraModal";
+import { ChainIdType } from "@/types/ChainId";
 
 export default function ProductScreen() {
   const product = useLocalSearchParams();
@@ -37,9 +38,12 @@ export default function ProductScreen() {
   };
   const [showSnakbar, setShowSnackbar] = useState(false);
 
+  const chainId = useChainId() as ChainIdType;
+
   const { data: ownerAddress } = useReadContract({
     abi: abiProperty,
-    address: addressProperty,
+    address: addressProperty(chainId),
+    chainId,
     functionName: "ownerOf",
     args: [certId],
   });

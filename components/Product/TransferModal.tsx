@@ -2,10 +2,11 @@ import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { Dialog, HelperText, TextInput } from "react-native-paper";
 import { isAddress } from "viem";
 import StyledButton from "../Shared/StyledButton";
-import { useAccount, useWriteContract } from "wagmi";
+import { useAccount, useChainId, useWriteContract } from "wagmi";
 import { abi, address } from "@/constants/RadicaPropertyContract";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
+import { ChainIdType } from "@/types/ChainId";
 
 type TransferModalProps = {
   recipientAddress: string;
@@ -26,6 +27,7 @@ export function TransferModal({
 }: TransferModalProps) {
   const [recipientAddressCopy, setRecipientAddressCopy] = useState<string>("");
   const { address: userAddress } = useAccount();
+  const chainId = useChainId() as ChainIdType;
   const { writeContract, isPending } = useWriteContract({
     mutation: {
       onError: () => {
@@ -45,7 +47,8 @@ export function TransferModal({
   const handleTransfer = async () => {
     writeContract({
       abi,
-      address,
+      address: address(chainId),
+      chainId,
       functionName: "safeTransferFrom",
       args: [
         userAddress as `0x${string}`,

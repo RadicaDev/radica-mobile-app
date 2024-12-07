@@ -1,5 +1,10 @@
 import { BackgroundGradient } from "@/components/Shared/BackgroundGradient";
-import { useAccount, useReadContract, useReadContracts } from "wagmi";
+import {
+  useAccount,
+  useChainId,
+  useReadContract,
+  useReadContracts,
+} from "wagmi";
 import { WalletConnect } from "@/components/Wallet/WalletConnect";
 import { Products } from "@/components/Wallet/Products";
 import {
@@ -10,10 +15,12 @@ import {
   abi as abiProperty,
   address as addressProperty,
 } from "@/constants/RadicaPropertyContract";
-import { Certificate, Metadata } from "@/types/Metadata";
+import { Certificate } from "@/types/Metadata";
+import { ChainIdType } from "@/types/ChainId";
 
 export default function WalletScreen() {
   const { address } = useAccount();
+  const chainId = useChainId() as ChainIdType;
 
   const {
     data: balance,
@@ -21,7 +28,8 @@ export default function WalletScreen() {
     refetch: refetchBalance,
   } = useReadContract({
     abi: abiProperty,
-    address: addressProperty,
+    address: addressProperty(chainId),
+    chainId,
     functionName: "balanceOf",
     args: [address as `0x${string}`],
     query: {
@@ -37,7 +45,8 @@ export default function WalletScreen() {
     for (let i = 0n; i < balance; i++) {
       contractList.push({
         abi: abiProperty,
-        address: addressProperty,
+        address: addressProperty(chainId),
+        chainId,
         functionName: "tokenOfOwnerByIndex",
         args: [address as `0x${string}`, i],
       } as const);
@@ -66,7 +75,8 @@ export default function WalletScreen() {
       (tagAddr) =>
         ({
           abi: abiTag,
-          address: addressTag,
+          address: addressTag(chainId),
+          chainId,
           functionName: "tagAddrToCert",
           args: [tagAddr],
         }) as const,

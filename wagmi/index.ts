@@ -1,6 +1,6 @@
 import { Web3ModalOptions } from "@web3modal/wagmi-react-native";
 import { defaultWagmiConfig } from "@reown/appkit-wagmi-react-native";
-import { hardhat } from "viem/chains";
+import { hardhat, hederaTestnet } from "viem/chains";
 import { appSettings } from "../app-settings";
 import * as Clipboard from "expo-clipboard";
 
@@ -24,6 +24,7 @@ export const chains = [
       default: { http: [appSettings[hardhat.id].rpcUrl] },
     },
   },
+  hederaTestnet,
 ] as const;
 
 export const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
@@ -31,7 +32,7 @@ export const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 const modalOptions: Web3ModalOptions = {
   projectId,
   wagmiConfig,
-  defaultChain: hardhat,
+  defaultChain: hederaTestnet,
   enableAnalytics: false,
   clipboardClient: {
     setString: async (value: string) => {
