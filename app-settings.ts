@@ -2,6 +2,8 @@ import { hardhat, hederaTestnet } from "viem/chains";
 
 export const defaultNetwork = hederaTestnet;
 
+export const signerAddress = "0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199";
+
 export const appSettings = {
   [hardhat.id]: {
     rpcUrl: "https://hardhat.radica.dev",
