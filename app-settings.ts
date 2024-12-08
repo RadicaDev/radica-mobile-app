@@ -1,5 +1,7 @@
 import { hardhat, hederaTestnet } from "viem/chains";
 
+export const defaultNetwork = hederaTestnet;
+
 export const appSettings = {
   [hardhat.id]: {
     rpcUrl: "https://hardhat.radica.dev",

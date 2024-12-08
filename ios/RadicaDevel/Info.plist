@@ -34,7 +34,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>exp+radicadevel</string>
+          <string>exp+radica-devel</string>
         </array>
       </dict>
     </array>

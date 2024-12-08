@@ -19,6 +19,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { AppKit, createAppKit } from "@reown/appkit-wagmi-react-native";
 import modalOptions, { wagmiConfig } from "@/wagmi";
+import { SwitchChain } from "@/wagmi/SwitchChain";
+import { defaultNetwork } from "@/app-settings";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -72,6 +74,7 @@ export default function RootLayout() {
             </Stack>
           </PaperProvider>
           <AppKit />
+          <SwitchChain chain={defaultNetwork} />
         </QueryClientProvider>
       </WagmiProvider>
     </ThemeProvider>
