@@ -2,9 +2,10 @@ import { Authentic } from "@/components/Verify/Authentic";
 import { Error } from "@/components/Verify/Error";
 import { Loading } from "@/components/Verify/Loading";
 import { abi, address } from "@/constants/RadicaTagContract";
-import { Metadata } from "@/types/Metadata";
+import { ChainIdType } from "@/types/ChainId";
+import { Certificate, Metadata, TracebilityMetadata } from "@/types/Metadata";
 import { useLocalSearchParams } from "expo-router";
-import { useReadContract } from "wagmi";
+import { useChainId, useReadContract } from "wagmi";
 
 export default function VerifyScreen() {
   const {
@@ -13,82 +14,54 @@ export default function VerifyScreen() {
   }: { recoveredAddress: `0x${string}`; proof?: `0x${string}` } =
     useLocalSearchParams();
 
+  const chainId = useChainId() as ChainIdType;
+
   const {
-    data: balance,
-    isLoading: isLoadingBalance,
-    isError: isErrorBalance,
+    data: cert,
+    isLoading: isLoadingCert,
+    isError: isErrorCert,
   } = useReadContract({
     abi,
-    address,
-    functionName: "balanceOf",
+    address: address(chainId),
+    functionName: "tagAddrToCert",
+    chainId,
     args: [recoveredAddress],
-  });
-
-  const {
-    data: tokenId,
-    isLoading: isLoadingTokenId,
-    isError: isErrorTokenId,
-  } = useReadContract({
-    abi,
-    address,
-    functionName: "tokenOfOwnerByIndex",
-    args: [recoveredAddress, 0n],
     query: {
-      enabled: balance !== undefined && balance > 0n,
-    },
-  });
-
-  const {
-    data: metadata,
-    isLoading: isLoadingMetadata,
-    isError: isErrorMetadata,
-  } = useReadContract({
-    abi,
-    address,
-    functionName: "tokenURI",
-    args: [tokenId as bigint],
-    query: {
-      enabled: tokenId !== undefined && balance !== undefined && balance > 0n,
       select: (data) => {
-        try {
-          const decodedString = atob(data);
-          const _metadata = JSON.parse(decodedString);
-
-          return _metadata as Metadata;
-        } catch (error: any) {
-          console.error(error);
-        }
+        return {
+          id: data[0],
+          metadata: data[1] as Metadata,
+          traceabilityMetadata: data[2] as TracebilityMetadata,
+        } as Certificate;
       },
     },
   });
+  const certId = cert?.id;
+  const metadata = cert?.metadata;
+  const traceabilityMetadata = cert?.traceabilityMetadata;
 
-  if (balance === 0n) {
+  if (certId === 0n) {
     return <Error text="Product is not Authentic" />;
   }
 
-  if (isErrorBalance || isErrorTokenId || isErrorMetadata) {
+  if (isErrorCert) {
     return <Error text="An Error Occurred" />;
   }
 
-  if (isLoadingBalance || isLoadingTokenId || isLoadingMetadata) {
-    const status = isLoadingBalance
-      ? "Checking blockchain..."
-      : "Loading metadata...";
-    const progress = isLoadingBalance ? 0 : isLoadingTokenId ? 0.5 : 1;
+  if (isLoadingCert) {
+    const status = "Checking Certificate...";
 
-    return <Loading status={status} progress={progress} />;
+    return <Loading status={status} />;
   }
 
-  if (metadata) {
+  if (certId && metadata && traceabilityMetadata) {
     return (
       <Authentic
-        id={metadata?.id}
-        name={metadata?.name}
-        description={metadata?.description}
-        image={metadata?.image}
-        external_url={metadata?.external_url}
-        tokenId={tokenId as bigint}
+        certId={certId}
+        metadata={metadata}
+        traceabilityMetadata={traceabilityMetadata}
         proof={proof}
+        tagAddress={recoveredAddress}
       />
     );
   }

@@ -1,7 +1,8 @@
 import { appSettings } from "@/app-settings";
+import { ChainIdType } from "@/types/ChainId";
 
-export const address = appSettings[31337]
-  .propertyContractAddress as `0x${string}`;
+export const address = (chainId: ChainIdType) =>
+  appSettings[chainId].propertyContractAddress as `0x${string}`;
 
 export const abi = [
   {
@@ -159,6 +160,22 @@ export const abi = [
       },
     ],
     name: "OwnableUnauthorizedAccount",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "value",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "length",
+        type: "uint256",
+      },
+    ],
+    name: "StringsInsufficientHexLength",
     type: "error",
   },
   {
@@ -335,11 +352,6 @@ export const abi = [
         internalType: "bytes32",
         name: "proof",
         type: "bytes32",
-      },
-      {
-        internalType: "string",
-        name: "uri",
-        type: "string",
       },
     ],
     name: "claimProperty",

@@ -1,5 +1,10 @@
 import { BackgroundGradient } from "@/components/Shared/BackgroundGradient";
-import { useAccount, useReadContract, useReadContracts } from "wagmi";
+import {
+  useAccount,
+  useChainId,
+  useReadContract,
+  useReadContracts,
+} from "wagmi";
 import { WalletConnect } from "@/components/Wallet/WalletConnect";
 import { Products } from "@/components/Wallet/Products";
 import {
@@ -10,10 +15,12 @@ import {
   abi as abiProperty,
   address as addressProperty,
 } from "@/constants/RadicaPropertyContract";
-import { Metadata } from "@/types/Metadata";
+import { Certificate } from "@/types/Metadata";
+import { ChainIdType } from "@/types/ChainId";
 
 export default function WalletScreen() {
   const { address } = useAccount();
+  const chainId = useChainId() as ChainIdType;
 
   const {
     data: balance,
@@ -21,7 +28,8 @@ export default function WalletScreen() {
     refetch: refetchBalance,
   } = useReadContract({
     abi: abiProperty,
-    address: addressProperty,
+    address: addressProperty(chainId),
+    chainId,
     functionName: "balanceOf",
     args: [address as `0x${string}`],
     query: {
@@ -37,7 +45,8 @@ export default function WalletScreen() {
     for (let i = 0n; i < balance; i++) {
       contractList.push({
         abi: abiProperty,
-        address: addressProperty,
+        address: addressProperty(chainId),
+        chainId,
         functionName: "tokenOfOwnerByIndex",
         args: [address as `0x${string}`, i],
       } as const);
@@ -46,60 +55,45 @@ export default function WalletScreen() {
     return contractList;
   })();
 
-  const { data: tokenIds } = useReadContracts({
+  const { data: tagAddrs } = useReadContracts({
     contracts,
     query: {
       enabled: address !== undefined && balance !== undefined && balance > 0n,
       select: (data) => {
-        return data
-          .map((data) => {
-            if (data.status === "success") return data.result;
-          })
-          .sort((a, b) => {
-            if (!a || !b) return 0;
-            return Number(a - b);
-          });
+        return data.map((data) => {
+          if (data.status === "success") {
+            if (data.result)
+              return `0x${(data.result % 2n ** 160n).toString(16)}`;
+          }
+        });
       },
     },
   });
 
-  const { data: products } = useReadContracts({
-    contracts: tokenIds?.map(
-      (tokenId) =>
+  const { data: certs } = useReadContracts({
+    contracts: tagAddrs?.map(
+      (tagAddr) =>
         ({
           abi: abiTag,
-          address: addressTag,
-          functionName: "tokenURI",
-          args: [tokenId],
+          address: addressTag(chainId),
+          chainId,
+          functionName: "tagAddrToCert",
+          args: [tagAddr],
         }) as const,
     ),
     query: {
-      enabled: tokenIds !== undefined && tokenIds.length > 0,
+      enabled: tagAddrs !== undefined && tagAddrs.length > 0,
       select: (data) =>
         data.map((data) => {
           if (data.status === "failure") return;
-
-          try {
-            const decodedString = atob(data.result);
-            const _metadata = JSON.parse(decodedString);
-
-            return _metadata as Metadata;
-          } catch (error: any) {
-            console.error(error);
-          }
+          return {
+            id: data.result[0],
+            metadata: data.result[1],
+            traceabilityMetadata: data.result[2],
+          } as Certificate;
         }),
     },
   });
-
-  const productsWithTokenIds = (() => {
-    if (!products || !tokenIds) return undefined;
-
-    return products.map((product, index) => {
-      return { ...product, tokenId: tokenIds[index] } as Metadata & {
-        tokenId: bigint;
-      };
-    });
-  })();
 
   return (
     <BackgroundGradient>
@@ -109,7 +103,7 @@ export default function WalletScreen() {
         <Products
           refreshing={isRefetchingBalance}
           onRefresh={refetchBalance}
-          products={productsWithTokenIds}
+          certs={certs}
         />
       )}
     </BackgroundGradient>

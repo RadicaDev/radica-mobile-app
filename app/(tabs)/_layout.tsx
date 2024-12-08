@@ -37,7 +37,7 @@ export default function TabLayout() {
         options={{
           title: "Verify",
           tabBarIcon: ({ color }) => (
-            <Icon source="nfc" size={28} color={color} />
+            <Icon source="contactless-payment" size={28} color={color} />
           ),
         }}
       />

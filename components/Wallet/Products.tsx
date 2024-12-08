@@ -8,18 +8,18 @@ import {
 import ConnectButton from "./ConnectButton";
 import { Text } from "react-native-paper";
 import { ProductCard } from "./ProductCard";
-import { Metadata } from "@/types/Metadata";
+import { Certificate, Metadata } from "@/types/Metadata";
 
 type ProductsProps = {
   refreshing: boolean;
   onRefresh: () => void;
-  products: ((Metadata & { tokenId: bigint }) | undefined)[] | undefined;
+  certs?: (Certificate | undefined)[];
 };
 
-export function Products({ refreshing, onRefresh, products }: ProductsProps) {
-  const productsCards = products?.map((product, key) => {
-    if (product === undefined) return null;
-    return <ProductCard product={product} key={key} />;
+export function Products({ refreshing, onRefresh, certs }: ProductsProps) {
+  const productsCards = certs?.map((cert, key) => {
+    if (cert === undefined) return null;
+    return <ProductCard cert={cert} key={key} />;
   });
 
   return (

@@ -5,10 +5,9 @@ import { ProgressBar, Text } from "react-native-paper";
 
 interface LoadingProps {
   status: string;
-  progress: number;
 }
 
-export function Loading({ status, progress }: LoadingProps) {
+export function Loading({ status }: LoadingProps) {
   const theme = useAppTheme();
 
   return (
@@ -25,7 +24,7 @@ export function Loading({ status, progress }: LoadingProps) {
         </Text>
         <View style={styles.progressBarContainer}>
           <ProgressBar
-            progress={progress}
+            indeterminate
             color={theme.colors.primary}
             style={styles.progressBar}
           />
