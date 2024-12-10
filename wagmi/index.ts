@@ -1,7 +1,6 @@
 import { Web3ModalOptions } from "@web3modal/wagmi-react-native";
 import { defaultWagmiConfig } from "@reown/appkit-wagmi-react-native";
-import { hardhat, hederaTestnet } from "viem/chains";
-import { appSettings } from "../app-settings";
+import { hederaTestnet } from "viem/chains";
 import * as Clipboard from "expo-clipboard";
 
 const projectId = "dace2ce5fa77568df22525a38edf07e8";
@@ -18,12 +17,6 @@ const metadata = {
 };
 
 export const chains = [
-  {
-    ...hardhat,
-    rpcUrls: {
-      default: { http: [appSettings[hardhat.id].rpcUrl] },
-    },
-  },
   hederaTestnet,
 ] as const;
 
