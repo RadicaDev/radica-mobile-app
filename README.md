@@ -2,7 +2,6 @@
 
 Radica mobile app allows you to verify product certified with Radica technology by scanning NFC tags.
 
-
 ## Installation
 
 ### Requirements
@@ -10,7 +9,8 @@ Radica mobile app allows you to verify product certified with Radica technology 
 - Node.js
 - Apple Developer Account (for iOS)
 
-> **Note:** You need to have an Apple Developer Account to install the app on your iPhone. This is required since the app uses the NFC api which is not available on the simulator. You must also configure your account in Xcode. You can follow the expo guide [here](https://docs.expo.dev/get-started/set-up-your-environment/?platform=ios&device=physical&mode=development-build&buildEnv=local).
+> [!NOTE]
+> You need to have an Apple Developer Account to install the app on your iPhone. This is required since the app uses the NFC api which is not available on the simulator. You must also configure your account in Xcode. You can follow the expo guide [here](https://docs.expo.dev/get-started/set-up-your-environment/?platform=ios&device=physical&mode=development-build&buildEnv=local).
 
 ### Run Locally
 
@@ -31,10 +31,13 @@ Install dependencies
 ```bash
 npm install
 ```
-    
+
 To run the project locally first setup the blockchain environment by following the instructions in the [radica-contracts](https://github.com/RadicaDev/radica-contracts.git) repository.
 
 Be sure to set the right parameters in `app-settings.ts` file.
+
+> [!NOTE]
+> The `signerAddress` in the `app-settings.ts` file should be the address you used to sign the NFC tags in the `radica-contracts` repository. You can find it in `radica-contracts/crypto-keys/address.ts`.
 
 #### Development build
 
@@ -71,4 +74,3 @@ The app has three main tabs:
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
